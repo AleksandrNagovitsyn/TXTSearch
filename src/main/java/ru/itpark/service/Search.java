@@ -2,137 +2,106 @@ package ru.itpark.service;
 
 import ru.itpark.model.Text;
 
+import javax.servlet.http.Part;
 import java.util.*;
 
 public class Search {
     private Collection<Text> searchedText = new HashSet<>();
+}
 
 
 
 
-    public class FrontServlet extends HttpServlet {
-        private HouseService service;
-        private Path uploadPath;
+package ru.itpark.service;
 
-        // component -> LifeCycle managed by container
-        // init -> инициализация
-        // destroy -> уничтожение
-        @Override
-        public void init() throws ServletException {
-            try {
-                service = new HouseService();
-//            service.save(new House("", "Ново-Савиновский", Arrays.asList("Яшьлек", "Козья"), 4, null), uploadPath);
-//            service.save(new House("", "Кировский", Collections.emptyList(), 2, null), uploadPath);
-                uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
-                if (Files.notExists(uploadPath)) {
-                    Files.createDirectory(uploadPath);
-                }
-                System.out.println(uploadPath);
-            } catch (IOException e) {
-                throw new ServletException(e);
-            }
+        import ru.itpark.exception.NotFoundException;
+        import ru.itpark.model.House;
+
+        import javax.servlet.http.Part;
+        import java.io.IOException;
+        import java.nio.file.Files;
+        import java.nio.file.Path;
+        import java.util.*;
+        import java.util.stream.Collectors;
+
+// FIXME: для примера делаем всё в одном сервисе, хотя хорошо бы для работы с файлами сделать отдельный сервис, как в видео
+public class HouseService {
+    private final Collection<House> items = new LinkedList<>();
+
+    public Collection<House> getAll() {
+        return items;
+    }
+
+    public Collection<House> searchByDistrict(String district) {
+        return items.stream()
+                .filter(o -> o.getDistrict().equals(district))
+                .collect(Collectors.toList());
+    }
+
+    public Collection<House> searchByUnderground(String underground) {
+        return items.stream()
+                .filter(o -> o.getUndergrounds().contains(underground))
+                .collect(Collectors.toList());
+    }
+
+    public void save(String id, String district, String undergrounds, String price, Part file, Path path) {
+        // "  Козья  "
+        final List<String> parsedUndergrounds = Arrays.stream(undergrounds.split(" "))
+                .filter(o -> !o.isEmpty())
+                .collect(Collectors.toList());
+
+        final int parsedPrice = Integer.parseInt(price);
+        if (id.equals("")) {
+            id = generateId();
+            writeFile(id, file, path);
+            insert(new House(id, district, parsedUndergrounds, parsedPrice));
+            return;
         }
 
-        // TODO: это надо переделать из "одного большого метода", на несколько целевых
-        // Servlet -> service (родительский вообще не вызываем)
-        @Override
-        protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            // protected - ok
-            // null - ok
-            // Object - ok
-            // в какой кодировке принимаем данные
-            req.setCharacterEncoding("UTF-8");
-            System.out.println(Thread.currentThread().getName());
+        writeFile(id, file, path);
+        update(new House(id, district, parsedUndergrounds, parsedPrice));
+    }
 
-            // Servlet -> request/response
-            // Service -> business logic'а
-            // JSP -> view
-
-            // "/"
-            // "".length()
-            String url = req.getRequestURI().substring(req.getContextPath().length());
-            System.out.println(url);
-
-            if (url.equals("/")) {
-                resp.getWriter().write("ok");
-                return;
+    private void writeFile(String id, Part file, Path uploadPath) {
+        if (file != null && file.getSize() != 0) {
+            try {
+                file.write(uploadPath.resolve(id).toString());
+                file.delete();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            if (url.equals("/houses")) {
-                if (req.getMethod().equals("GET")) {
-                    req.setAttribute(Constants.ITEMS, service.getAll());
-                    req.getRequestDispatcher("/WEB-INF/houses.jsp").forward(req, resp);
-                    return;
-                }
-
-                if (req.getMethod().equals("POST")) {
-                    //
-                    final String action = req.getParameter("action");
-                    if (action.equals("remove")) {
-                        service.removeById(req.getParameter("id"), uploadPath);
-                        resp.sendRedirect(req.getRequestURI());
-                        return;
-                    }
-
-                    if (action.equals("edit")) {
-                        final String id = req.getParameter("id");
-                        final House item = service.getById(id);
-                        req.setAttribute(Constants.ITEMS, service.getAll());
-                        req.setAttribute(Constants.ITEM, item);
-                        req.getRequestDispatcher("/WEB-INF/houses.jsp").forward(req, resp);
-                        return;
-                    }
-
-                    if (action.equals("save")) {
-                        // ничего не изменится
-                        final String id = req.getParameter("id");
-                        final String district = req.getParameter("district");
-                        final String undergrounds = req.getParameter("undergrounds");
-                        final String price = req.getParameter("price");
-                        final Part file = req.getPart("file");
-
-                        service.save(id, district, undergrounds, price, file, uploadPath);
-                        // чтобы повторно не отрисовывать, отправляем его на страницу, где итак отрисовывается весь список
-                        resp.sendRedirect(req.getRequestURI());
-                        return;
-                    }
-                }
-            }
-
-            if (url.equals("/houses/search")) {
-                final String q = req.getParameter("q");
-                final Collection<House> foundByUnderground = service.searchByUnderground(q);
-                final Collection<House> foundByDistrict = service.searchByDistrict(q);
-
-                Set<House> items = new HashSet<>();
-                items.addAll(foundByUnderground);
-                items.addAll(foundByDistrict);
-
-                req.setAttribute(Constants.ITEMS, items);
-                req.setAttribute(Constants.SEARCH_QUERY, q);
-
-                req.getRequestDispatcher("/WEB-INF/houses.jsp").forward(req, resp);
-                return;
-            }
-
-            // FIXME: это достаточно вольная работа с изображениями
-            if (url.startsWith("/images/")) {
-                String id = url.substring("/images/".length());
-                System.out.println(id);
-                final Path image = uploadPath.resolve(id);
-                if (Files.exists(image)) {
-                    Files.copy(image, resp.getOutputStream());
-                    return;
-                }
-
-                try {
-                    Files.copy(Paths.get(getServletContext().getResource("/WEB-INF/404.png").toURI()), resp.getOutputStream());
-                } catch (URISyntaxException e) {
-                    throw new IOException(e);
-                }
-            }
-
-            req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
         }
     }
 
+    public void insert(House house) {
+        items.add(house);
+    }
+
+    public void update(House house) {
+        boolean removed = items.removeIf(o -> o.getId().equals(house.getId()));
+        if (!removed) {
+            throw new NotFoundException();
+        }
+        items.add(house);
+    }
+
+    private String generateId() {
+        return UUID.randomUUID().toString();
+    }
+
+    public void removeById(String id, Path path) {
+        items.removeIf(o -> o.getId().equals(id));
+        try {
+            Files.deleteIfExists(path.resolve(id));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public House getById(String id) {
+        return items.stream()
+                .filter(o -> o.getId().equals(id))
+                .findAny()
+                .orElseThrow(NotFoundException::new);
+    }
+}
