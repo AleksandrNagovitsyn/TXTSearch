@@ -13,21 +13,15 @@ import java.util.UUID;
 
 @Data
 public class FileService {
-    private Path uploadPath;
     public FileService() throws IOException {
-        uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
-        if (Files.notExists(uploadPath)) {
-            Files.createDirectory(uploadPath);
-        }
     }
 
 
-
-    public void writeFile (Part file) {
+    public void writeFile (Path path, Part file) {
         String id = UUID.randomUUID().toString();
         if (file != null && file.getSize() != 0) {
             try {
-                file.write(uploadPath.resolve(id).toString());
+                file.write(path.resolve(id).toString());
                 file.delete();
             } catch (IOException e) {
                 e.printStackTrace();

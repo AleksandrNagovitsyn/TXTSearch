@@ -16,8 +16,8 @@
     <title>TXTSearcher</title>
 </head>
 <body>
-<form action="<%= request.getContextPath() %>/" method="post" enctype="multipart/form-data">
-    <input type="file" name = "file">
+<form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
+    <input type="file" name = "file" accept="image/*">
     <button>Загрузить</button>
 </form>
 </body>

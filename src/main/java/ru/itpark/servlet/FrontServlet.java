@@ -9,33 +9,55 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FrontServlet extends HttpServlet {
     private FileService fileService;
+    private Path uploadPath;
+
 
     @Override
     public void init() {
+        uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
+        if (Files.notExists(uploadPath)) {
+            try {
+                Files.createDirectory(uploadPath);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+
         try {
-            FileService fileService = new FileService();
+            fileService = new FileService();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-//TODO: не поня лкак дебажить
+
+    //TODO: не поня лкак дебажить
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
-           req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+        if (url.equals("/")) {
+            System.out.println(uploadPath);
+            req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+        }
             if (req.getMethod().equals("POST")) {
 //                String name = req.getParameter("file");
 //                if (name.equals("upload")) {
                     Part file = req.getPart("file");
-                    fileService.writeFile(file);
-                    resp.sendRedirect("/");
-        }
+                    fileService.writeFile(uploadPath, file);
+                    resp.sendRedirect(req.getRequestURI());
+//                }
+            }
+
+         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
+
+
     }
 }
 
