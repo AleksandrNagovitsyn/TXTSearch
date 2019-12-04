@@ -16,31 +16,32 @@ import java.util.List;
 public class RepositoryJdbcImpl implements Repository<Text> {
     private DataSource dataSource;
 //    TODO: что за datasource
+//    TODO: одно из двух используем , либо датасоурс, либо jdbc template?
 
-    public void init() {
-        try {
-            var context = new InitialContext();
-            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
-        } catch (NamingException e) {
-            e.printStackTrace();
-        }
-
-        try (
-                Connection connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
-
-        ) {
-            statement.execute("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, textURI TEXT NOT NULL, status TEXT NOT NULL)");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void init() {
+//        try {
+//            var context = new InitialContext();
+//            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try (
+//                Connection connection = dataSource.getConnection();
+//                Statement statement = connection.createStatement();
+//
+//        ) {
+//            statement.execute("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, textURI TEXT NOT NULL, status TEXT NOT NULL)");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public List<Text> gerAll() {
         List<Text> texts;
         try {
-            texts = JdbcTemplate.executeQuery()
+            texts = JdbcTemplate.executeQuery();
         }
     }
 
