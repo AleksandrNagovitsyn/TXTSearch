@@ -16,7 +16,7 @@ import java.util.List;
 public class RepositoryJdbcImpl implements Repository<Text> {
     private DataSource dataSource;
 //    TODO: что за datasource
-//    TODO: одно из двух используем , либо датасоурс, либо jdbc template?
+//    TODO: ВАЖНО одно из двух используем , либо датасоурс, либо jdbc template? А ЧТО И ПОЧЕМУ ЛУЧШЕ?
 
 //    public void init() {
 //        try {
