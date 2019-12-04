@@ -2,7 +2,10 @@ package ru.itpark.repository;
 
 import lombok.RequiredArgsConstructor;
 import ru.itpark.model.Text;
+import util.JdbcTemplate;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,20 +14,38 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class RepositoryJdbcImpl implements Repository<Text> {
-    private final DataSource dataSource;
+    private DataSource dataSource;
 //    TODO: что за datasource
 
     public void init() {
+        try {
+            var context = new InitialContext();
+            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement();
 
         ) {
-            statement.execute("CREATE TABLE books (id TEXT PRIMARY KEY, query TEXT NOT NULL, status TEXT NOT NULL)");
+            statement.execute("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, textURI TEXT NOT NULL, status TEXT NOT NULL)");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public List<Text> gerAll() {
+        List<Text> texts;
+        try {
+            texts = JdbcTemplate.executeQuery()
+        }
+    }
+
+
+    public
 
 
 
