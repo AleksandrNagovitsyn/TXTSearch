@@ -3,6 +3,7 @@ package ru.itpark.servlet;
 import ru.itpark.service.FileService;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,14 +13,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+
+@MultipartConfig
 public class FrontServlet extends HttpServlet {
     private FileService fileService;
     private Path uploadPath;
 
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
+//        InitialContext context = null;
+//        try {
+//            context = new InitialContext();
+//            fileService = (FileService) context.lookup("java:/comp/env/bean/file-service");
+//        } catch (NamingException e) {
+////            TODO: вот этот ексепшен вылезает
+//            throw new ServletException(e);
+//        }
         uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
+//        FIXME: если переменной присваивать значение в сервис классе, не работает. Поэкспреременитровать
         if (Files.notExists(uploadPath)) {
             try {
                 Files.createDirectory(uploadPath);
@@ -47,12 +59,10 @@ public class FrontServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
         }
             if (req.getMethod().equals("POST")) {
-//                String name = req.getParameter("file");
-//                if (name.equals("upload")) {
-                    Part file = req.getPart("file");
-                    fileService.writeFile(uploadPath, file);
-                    resp.sendRedirect(req.getRequestURI());
-//                }
+                Part file = req.getPart("file");
+                fileService.writeFile(uploadPath, file);
+//                    FIXME: файл не записывается
+                resp.sendRedirect("/");
             }
 
          req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);

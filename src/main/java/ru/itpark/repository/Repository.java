@@ -1,5 +1,8 @@
 package ru.itpark.repository;
 
-public interface Repository <E> {
+import java.util.List;
 
+public interface Repository <E> {
+    void init();
+    List <E> gerAll();
 }

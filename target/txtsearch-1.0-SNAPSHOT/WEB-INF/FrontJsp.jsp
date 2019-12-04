@@ -17,7 +17,7 @@
 </head>
 <body>
 <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
-    <input type="file" name = "file" accept="image/*">
+    <input type="file" name = "file" >
     <button>Загрузить</button>
 </form>
 </body>
