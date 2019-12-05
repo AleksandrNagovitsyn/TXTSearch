@@ -5,8 +5,16 @@
             type = "ru.itpark.service.FileService"
             facroty = "org.apache.naming.factory.BeanFactory"
     />
+    <Resource
+            name = "jdbc/db"
+            auth = "Сontainer"
+            type = "javax.sql.DataSource"
+            driverClassName = "org.sqlite.JDBC"
+            url = "jdbc:sqlite::memory"
+            closeMethod = "close"
+    />
 
-<!--    TODO: для чего вообще контекст? -->
+<!--    TODO: для чего вообще контекст? Нужны пояснения по строчкам-->
 
 
 </Context>

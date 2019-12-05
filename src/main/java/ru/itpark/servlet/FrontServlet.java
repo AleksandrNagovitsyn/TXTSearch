@@ -1,5 +1,6 @@
 package ru.itpark.servlet;
 
+import ru.itpark.repository.RepositoryJdbcImpl;
 import ru.itpark.service.FileService;
 
 import javax.servlet.ServletException;
@@ -42,7 +43,7 @@ public class FrontServlet extends HttpServlet {
 
 
         try {
-            fileService = new FileService();
+            fileService = new FileService(new RepositoryJdbcImpl());
         } catch (IOException e) {
             e.printStackTrace();
         }

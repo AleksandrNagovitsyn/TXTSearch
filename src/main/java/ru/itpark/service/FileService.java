@@ -3,6 +3,8 @@ package ru.itpark.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.itpark.model.Text;
+import ru.itpark.repository.Repository;
 
 import javax.servlet.http.Part;
 import java.io.IOException;
@@ -13,7 +15,9 @@ import java.util.UUID;
 
 @Data
 public class FileService {
-    public FileService() throws IOException {
+//    private Repository<Text> currentRepository;
+    public FileService(Repository <Text> currentRepository) throws IOException {
+        currentRepository.init();
     }
 
 

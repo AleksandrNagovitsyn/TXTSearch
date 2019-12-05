@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Repository <E> {
     void init();
-    List <E> gerAll();
+    List <E> getAll();
 }

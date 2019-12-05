@@ -6,8 +6,13 @@ import javax.servlet.http.Part;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Search {
+public class BookService {
     private Collection<Text> searchedText = new HashSet<>();
+
+//    public String save ();
+
+//    TODO:  записыват файл - дает назавние - присваивает id
+
 }
 
 
