@@ -1,13 +1,63 @@
 package ru.itpark.service;
 
 import ru.itpark.model.Text;
+import ru.itpark.repository.Repository;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.http.Part;
+import javax.sql.DataSource;
 import java.nio.file.Path;
+import java.sql.*;
 import java.util.*;
 
 public class BookService {
     private Collection<Text> searchedText = new HashSet<>();
+    Repository<Text> currentRepository;
+    private DataSource ds;
+
+
+    public BookService () throws SQLException, NamingException {
+        InitialContext context = new InitialContext();
+        ds = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+        try (
+                Connection connection = ds.getConnection()
+        ){
+            try(Statement statement = connection.createStatement()) {
+                statement.execute("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, name TEXT NOT NULL, textURI TEXT NOT NULL)");
+            }
+        }
+
+    }
+
+
+    public void register (Text t) throws SQLException {
+        try (   Connection connection = ds.getConnection();
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO books (id, name, textURI) VALUES(?, ?, ?)")
+        ) {
+
+            statement.setString(1, t.getId());
+            statement.setString(2, t.getName());
+            statement.setString(2, t.getTextURI());
+            statement.executeUpdate();
+            }
+
+    }
+
+    public List<Text> getAll() {
+        try (
+                Connection connection = ds.getConnection();
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery("SELECT id, name, textURI FROM books");
+        ) {
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
 
 //    public String save ();
 

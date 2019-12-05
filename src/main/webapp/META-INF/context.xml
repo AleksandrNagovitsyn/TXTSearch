@@ -6,13 +6,15 @@
             facroty = "org.apache.naming.factory.BeanFactory"
     />
     <Resource
+
             name = "jdbc/db"
             auth = "Сontainer"
             type = "javax.sql.DataSource"
             driverClassName = "org.sqlite.JDBC"
-            url = "jdbc:sqlite::memory"
-            closeMethod = "close"
-    />
+            url = "jdbc:sqlite:db.sqlite"
+            closeMethod = "close"    />
+<!--            FIXME: ругается на мемори-->
+
 
 <!--    TODO: для чего вообще контекст? Нужны пояснения по строчкам-->
 

@@ -42,19 +42,29 @@ public class RepositoryJdbcImpl implements Repository<Text> {
 
 
     @Override
-    public void init() {
-        try {
-            JdbcTemplate.init("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, name TEXT NOT NULL textURI TEXT NOT NULL)");
-        } catch (NamingException e) {
-            e.printStackTrace();
+    public void init() throws NamingException, SQLException {
+        InitialContext context = new InitialContext();
+        DataSource ds = (DataSource) context.lookup("java:/comp/env/jdbc/db");
+        try (
+           Connection connection = ds.getConnection()
+        ){
+            try(Statement statement = connection.createStatement()) {
+                statement.execute("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, name TEXT NOT NULL, textURI TEXT NOT NULL)");
+            }
         }
+//        try {
+//            JdbcTemplate.init("CREATE TABLE IF NOT EXISTS books (id TEXT PRIMARY KEY, name TEXT NOT NULL, textURI TEXT NOT NULL)");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
     public List<Text> getAll() {
         List<Text> texts;
         try {
-            texts = JdbcTemplate.executeQuery("SELECT id, textURI",
+
+            texts = JdbcTemplate.executeQuery("SELECT id, name, textURI FROM books",
                     resultSet -> (new Text(
                             resultSet.getString("id"),
                             resultSet.getString("name"),
@@ -72,7 +82,7 @@ public class RepositoryJdbcImpl implements Repository<Text> {
 
     public Text save (Text text)  {
         try {
-            return text.getId().equals("0") ? insert(text): update(text);
+            return text.getId().equals("") ? insert(text): update(text);
         } catch (NamingException e) {
             e.printStackTrace();
             throw new RuntimeException("some problems here");

@@ -16,6 +16,7 @@
     <title>TXTSearcher</title>
 </head>
 <body>
+<p>${Items}</p>
 <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
     <input type="file" name = "file" >
     <button>Загрузить</button>

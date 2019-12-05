@@ -1,8 +1,11 @@
 package ru.itpark.servlet;
 
+import ru.itpark.model.Text;
 import ru.itpark.repository.RepositoryJdbcImpl;
+import ru.itpark.service.BookService;
 import ru.itpark.service.FileService;
 
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -13,16 +16,29 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 
 @MultipartConfig
 public class FrontServlet extends HttpServlet {
+    private BookService bookService;
     private FileService fileService;
     private Path uploadPath;
 
 
     @Override
     public void init() throws ServletException {
+        try {
+            bookService = new BookService();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
 //        InitialContext context = null;
 //        try {
 //            context = new InitialContext();
@@ -42,22 +58,34 @@ public class FrontServlet extends HttpServlet {
         }
 
 
-        try {
-            fileService = new FileService(new RepositoryJdbcImpl());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+            fileService = new FileService();
+
     }
 
     //TODO: не поня лкак дебажить
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Collection<Text> books = new HashSet<>();
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
+
+            try {
+                bookService.register(new Text ("1", "AnnaKarenina", "URI"));
+                bookService.register(new Text ("2", "AnnaKarenina2", "URI2"));
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+
             System.out.println(uploadPath);
+            Collection<Text> items = bookService.getAll();
+            req.setAttribute("Items", items.toString());
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+
         }
             if (req.getMethod().equals("POST")) {
                 Part file = req.getPart("file");

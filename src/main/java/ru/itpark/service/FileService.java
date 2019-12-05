@@ -16,9 +16,6 @@ import java.util.UUID;
 @Data
 public class FileService {
 //    private Repository<Text> currentRepository;
-    public FileService(Repository <Text> currentRepository) throws IOException {
-        currentRepository.init();
-    }
 
 
     public void writeFile (Path path, Part file) {
