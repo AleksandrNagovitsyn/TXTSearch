@@ -5,6 +5,7 @@ import ru.itpark.repository.RepositoryJdbcImpl;
 import ru.itpark.service.BookService;
 import ru.itpark.service.FileService;
 
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,15 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 
 
 @MultipartConfig
@@ -28,25 +26,21 @@ public class FrontServlet extends HttpServlet {
     private BookService bookService;
     private FileService fileService;
     private Path uploadPath;
+    private DataSource dataSource;
+    private InitialContext context;
 
 
     @Override
-    public void init() throws ServletException {
+    public void init()  {
         try {
-            bookService = new BookService();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            context = new InitialContext();
+            dataSource = (DataSource) context.lookup("java:/comp/env/bean/jdbc/db");
         } catch (NamingException e) {
             e.printStackTrace();
         }
-//        InitialContext context = null;
-//        try {
-//            context = new InitialContext();
-//            fileService = (FileService) context.lookup("java:/comp/env/bean/file-service");
-//        } catch (NamingException e) {
-////            TODO: вот этот ексепшен вылезает
-//            throw new ServletException(e);
-//        }
+            bookService = new BookService(new RepositoryJdbcImpl(dataSource));
+//        TODO: а можно через lookup создать объект с указанием аргументов?
+
         uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
 //        FIXME: если переменной присваивать значение в сервис классе, не работает. Поэкспреременитровать
         if (Files.notExists(uploadPath)) {
@@ -66,23 +60,17 @@ public class FrontServlet extends HttpServlet {
     //TODO: не поня лкак дебажить
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Collection<Text> books = new HashSet<>();
+
+        bookService.register(new Text ("AnnaKarenina", "URI"));
+        bookService.register(new Text ("AnnaKarenina2", "URI2"));
+
+        Collection<Text> items;
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
-
-            try {
-                bookService.register(new Text ("1", "AnnaKarenina", "URI"));
-                bookService.register(new Text ("2", "AnnaKarenina2", "URI2"));
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-
             System.out.println(uploadPath);
-            Collection<Text> items = bookService.getAll();
+            items = bookService.showText();
             req.setAttribute("Items", items.toString());
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 
