@@ -84,8 +84,6 @@ public class FrontServlet extends HttpServlet {
             }
 
          req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
-
-
     }
 }
 

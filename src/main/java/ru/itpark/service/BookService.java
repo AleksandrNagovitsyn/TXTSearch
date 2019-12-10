@@ -11,10 +11,14 @@ import javax.sql.DataSource;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BookService {
 
-    Repository<Text> currentRepository;
+    private Repository<Text> currentRepository;
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
+
 
 
     public BookService(Repository<Text> currentRepository) {
@@ -37,7 +41,11 @@ public class BookService {
 //        currentRepository.save(text);
 //    }
 
-    public String search
+    public String search (String searchingString){
+        String foundedText = " ";
+//        TODO: допилить через потоки, почитать на JavaRush про них
+        return foundedText;
+    }
 
 }
 
