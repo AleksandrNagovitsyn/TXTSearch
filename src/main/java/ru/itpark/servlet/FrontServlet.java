@@ -34,7 +34,7 @@ public class FrontServlet extends HttpServlet {
     public void init()  {
         try {
             context = new InitialContext();
-            dataSource = (DataSource) context.lookup("java:/comp/env/bean/jdbc/db");
+            dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
         } catch (NamingException e) {
             e.printStackTrace();
         }

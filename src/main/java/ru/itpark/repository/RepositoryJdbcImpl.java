@@ -53,7 +53,7 @@ public class RepositoryJdbcImpl implements Repository<Text> {
 
     public Text save (Text text)  {
         try {
-            return text.getId().equals(null) ? insert(text): update(text);
+            return text.getId() == null ? insert(text): update(text);
         } catch (NamingException e) {
             e.printStackTrace();
             throw new RuntimeException("Such ID not found");

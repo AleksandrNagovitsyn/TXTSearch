@@ -19,6 +19,13 @@ public class BookService {
 
     public BookService(Repository<Text> currentRepository) {
         this.currentRepository = currentRepository;
+        try {
+            currentRepository.init();
+        } catch (NamingException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Collection<Text> showText () {
