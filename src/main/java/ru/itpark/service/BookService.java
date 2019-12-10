@@ -33,9 +33,11 @@ public class BookService {
         return searchedText;
     }
 
-    public void register(Text text) {
-        currentRepository.save(text);
-    }
+//    public void register(Text text) {
+//        currentRepository.save(text);
+//    }
+
+    public String search
 
 }
 

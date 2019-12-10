@@ -18,6 +18,8 @@
 <body>
 <p>${Items}</p>
 <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="save">
+<%--    <input type="text" name = "name" placeholder="Название книги">--%>
     <input type="file" name = "file" >
     <button>Загрузить</button>
 </form>

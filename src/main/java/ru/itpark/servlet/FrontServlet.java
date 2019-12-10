@@ -61,9 +61,6 @@ public class FrontServlet extends HttpServlet {
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        bookService.register(new Text ("AnnaKarenina", "URI"));
-        bookService.register(new Text ("AnnaKarenina2", "URI2"));
-
         Collection<Text> items;
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
@@ -76,10 +73,14 @@ public class FrontServlet extends HttpServlet {
 
         }
             if (req.getMethod().equals("POST")) {
-                Part file = req.getPart("file");
-                fileService.writeFile(uploadPath, file);
-//                    FIXME: файл не записывается
-                resp.sendRedirect("/");
+                String action = req.getParameter("action");
+                if (action.equals("save")) {
+//                    String fileName = req.getParameter("name");
+
+                    Part file = req.getPart("file");
+                    fileService.writeFile(uploadPath, file);
+                    resp.sendRedirect("/");
+                }
             }
 
          req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
@@ -87,6 +88,8 @@ public class FrontServlet extends HttpServlet {
 
     }
 }
+
+//TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
 
 
 

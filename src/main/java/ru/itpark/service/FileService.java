@@ -19,10 +19,10 @@ public class FileService {
 
 
     public void writeFile (Path path, Part file) {
-        String id = UUID.randomUUID().toString();
+//        String id = UUID.randomUUID().toString();
         if (file != null && file.getSize() != 0) {
             try {
-                file.write(path.resolve(id).toString());
+                file.write(path.resolve(file.getSubmittedFileName()).toString());
                 file.delete();
             } catch (IOException e) {
                 e.printStackTrace();
