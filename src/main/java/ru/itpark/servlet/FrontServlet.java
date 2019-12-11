@@ -1,5 +1,6 @@
 package ru.itpark.servlet;
 
+import ru.itpark.constants.Constants;
 import ru.itpark.model.Text;
 import ru.itpark.repository.RepositoryJdbcImpl;
 import ru.itpark.service.BookService;
@@ -19,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.UUID;
 
 
 @MultipartConfig
@@ -66,20 +68,30 @@ public class FrontServlet extends HttpServlet {
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
-            System.out.println(uploadPath);
-            items = bookService.showText();
-            req.setAttribute("Items", items.toString());
+//            System.out.println(uploadPath);
+//            items = bookService.showText();
+//            req.setAttribute("Items", items.toString());
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+//            Text item = new Text();
+//            req.setAttribute(Constants.ITEM, item);
+
 
         }
             if (req.getMethod().equals("POST")) {
                 String action = req.getParameter("action");
+
                 if (action.equals("save")) {
 //                    String fileName = req.getParameter("name");
-
                     Part file = req.getPart("file");
-                    fileService.writeFile(uploadPath, file);
-                    resp.sendRedirect("/");
+                    String name = file.getSubmittedFileName();
+                   String textURI = fileService.writeFile(uploadPath, file);
+
+                    bookService.register(new Text(name,textURI));
+//                    resp.sendRedirect("/");
+                    items = bookService.showText();
+                    req.setAttribute("Items", items);
+                    System.out.println(bookService.showText().toString());
+
                 }
             }
 

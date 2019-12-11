@@ -2,23 +2,22 @@ package ru.itpark.service;
 
 import ru.itpark.model.Text;
 import ru.itpark.repository.Repository;
-import util.JdbcTemplate;
 
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.http.Part;
-import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class BookService {
 
     private Repository<Text> currentRepository;
-    private final ExecutorService executor = Executors.newFixedThreadPool(10);
-
+    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 
     public BookService(Repository<Text> currentRepository) {
@@ -32,21 +31,36 @@ public class BookService {
         }
     }
 
-    public Collection<Text> showText () {
+    public Collection<Text> showText() {
         Collection<Text> searchedText = new HashSet<>(currentRepository.getAll());
         return searchedText;
     }
 
-//    public void register(Text text) {
-//        currentRepository.save(text);
-//    }
-
-    public String search (String searchingString){
-        String foundedText = " ";
-//        TODO: допилить через потоки, почитать на JavaRush про них
-        return foundedText;
+    public void register(Text text) {
+        currentRepository.save(text);
     }
 
+    public Path search(Path path, String searchingString) throws IOException {
+        String id = UUID.randomUUID().toString();
+        Path createdFile = Files.createFile(path.resolve("exitTXT"+id));
+        List<Text> texts = currentRepository.getAll();
+        for (Text text : texts) {
+            String textURI = text.getTextURI();
+            Scanner scanner = new Scanner(textURI);
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                if (line.contains(searchingString)) {
+                    Files.writeString(createdFile, line);
+                }
+
+            }
+
+//        TODO: если не проканает поиск по одной лишь папке, сдедать БД для файлов
+//        executor.execute(() -> {
+//        TODO: допилить через потоки, почитать на JavaRush про них
+        }
+        return createdFile;
+    }
 }
 
 

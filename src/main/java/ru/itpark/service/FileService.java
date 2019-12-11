@@ -18,7 +18,8 @@ public class FileService {
 //    private Repository<Text> currentRepository;
 
 
-    public void writeFile (Path path, Part file) {
+    public String writeFile (Path path, Part file) {
+        String uploadedTextPath;
 //        String id = UUID.randomUUID().toString();
         if (file != null && file.getSize() != 0) {
             try {
@@ -29,5 +30,6 @@ public class FileService {
 //              TODO: додумать обработку
             }
         }
+        return uploadedTextPath = path.resolve(file.getSubmittedFileName()).toString();
     }
 }

@@ -1,4 +1,5 @@
-<%--
+<%@ page import="java.util.UUID" %>
+<%@ page import="ru.itpark.constants.Constants" %><%--
   Created by IntelliJ IDEA.
   User: Александр
   Date: 02.12.2019
@@ -16,13 +17,13 @@
     <title>TXTSearcher</title>
 </head>
 <body>
-<p>${Items}</p>
+
 <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
     <input type="hidden" name="action" value="save">
-<%--    <input type="text" name = "name" placeholder="Название книги">--%>
-    <input type="file" name = "file" >
+    <input type="file" name = "file" accept="text/*">
     <button>Загрузить</button>
 </form>
+<p>${Items}</p>
 </body>
 </html>
 
@@ -77,7 +78,7 @@
 <%--    <% } %>--%>
 <%--</ul>--%>
 
-<%--<% House item = (House) request.getAttribute(Constants.ITEM); %>--%>
+<%--<% House item = new Hose(); %>--%>
 <%--<form action="<%= request.getContextPath() %>/houses" method="post" enctype="multipart/form-data">--%>
 <%--    <input type="hidden" name="id" value="<%= item == null ? "" : item.getId() %>">--%>
 <%--    <input type="hidden" name="action" value="save">--%>

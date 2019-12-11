@@ -14,6 +14,7 @@ public class Text {
     private String textURI;
 
     public Text(String name, String textURI) {
+
         this.name = name;
         this.textURI = textURI;
     }
