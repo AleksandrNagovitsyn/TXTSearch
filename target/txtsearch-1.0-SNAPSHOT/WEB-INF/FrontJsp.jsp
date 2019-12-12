@@ -18,9 +18,9 @@
 </head>
 <body>
 
-<form action="<%= request.getContextPath()%>/search" method="post" enctype="multipart/form-data">
+<form action="<%= request.getContextPath()%>/search" method="get" enctype="multipart/form-data">
     <input type="hidden" name = "action" value="search">
-    <input type="text" placeholder="Введите искомую фразу" name="phrase" >
+    <input type="text" placeholder="Введите искомую фразу" name="q" value = "<%= request.getAttribute("Strings") == null?"": request.getAttribute("String")%>">
 </form>
 
 <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
@@ -28,7 +28,7 @@
     <input type="file" name = "file" accept="text/plain">
     <button>Загрузить</button>
 </form>
-<p><%=request.getAttribute("File")%>></p>
+<p>${Strings}</p>
 </body>
 </html>
 

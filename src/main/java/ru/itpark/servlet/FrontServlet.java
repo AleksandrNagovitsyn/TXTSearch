@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -61,14 +62,13 @@ public class FrontServlet extends HttpServlet {
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Collection<Text> items;
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
 //            System.out.println(uploadPath);
-            items = bookService.showText();
-            req.setAttribute("Items", items.toString());
+//            items = bookService.showText();
+//            req.setAttribute("Items", items.toString());
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 //            Text item = new Text();
 //            req.setAttribute(Constants.ITEM, item);
@@ -82,20 +82,19 @@ public class FrontServlet extends HttpServlet {
 //                    String fileName = req.getParameter("name");
                 Part file = req.getPart("file");
                 String name = file.getSubmittedFileName();
-                String textURI = fileService.writeFile(uploadPath, file);
-
-                bookService.register(new Text(name, textURI));
+                fileService.writeFile(uploadPath, file);
 //                    resp.sendRedirect("/");
 //                    items = bookService.showText();
 //                    req.setAttribute("Items", items);
                 resp.sendRedirect(req.getContextPath());
             }
-            if (action.equals("search")) {
-                String searchingPhrase = req.getParameter("phrase");
-                Path path = bookService.search(uploadPath, searchingPhrase);
-                req.setAttribute("File", path.toString());
+        }
+         if (req.getMethod().equals("GET"))   {
+            if (url.equals("/search")) {
+                String q = req.getParameter("q");
+                List<String> strings = bookService.showFounded(uploadPath, q);
+                req.setAttribute("Strings", strings);
                 req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
-
             }
         }
 

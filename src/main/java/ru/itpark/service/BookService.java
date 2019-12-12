@@ -35,20 +35,18 @@ public class BookService {
         }
     }
 
-    public Collection<Text> showText() {
-        Collection<Text> searchedText = new HashSet<>(currentRepository.getAll());
-        return searchedText;
-    }
-
-    public void register(Text text) {
-        currentRepository.save(text);
-    }
+//    public Collection<Text> showText() {
+//        Collection<Text> searchedText = new HashSet<>(currentRepository.getAll());
+//        return searchedText;
+//    }
+//    public void register(Text text) {
+//        currentRepository.save(text);
+//    }
 
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
         Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
 //        FIXME: Надо будет создать отдельную папку
-
         List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                 .collect(Collectors.toList());
         System.out.println(pathOfTexts.toString());
@@ -64,14 +62,16 @@ public class BookService {
                     }
                 }
             }
-
-
-
 //        TODO: если не проканает поиск по одной лишь папке, сделать БД для файлов
 //        executor.execute(() -> {
 //        TODO: допилить через потоки, почитать на JavaRush про них
-
         return createdFile;
+    }
+
+    public List<String> showFounded (Path path, String searchingString) throws IOException {
+         List <String> founded = Files.readAllLines(search(path, searchingString));
+         return  founded;
+
     }
 }
 
