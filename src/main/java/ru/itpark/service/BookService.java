@@ -6,6 +6,7 @@ import ru.itpark.repository.Repository;
 import javax.naming.NamingException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
@@ -43,6 +44,7 @@ public class BookService {
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
         Path createdFile = Files.createFile(path.resolve("exitTXT"+id));
+//        FIXME: Надо будет создать отдельную папку
         List<Text> texts = currentRepository.getAll();
         for (Text text : texts) {
             String textURI = text.getTextURI();
@@ -50,12 +52,12 @@ public class BookService {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 if (line.contains(searchingString)) {
-                    Files.writeString(createdFile, line);
+                    Files.writeString(createdFile, line, StandardCharsets.UTF_8);
                 }
 
             }
 
-//        TODO: если не проканает поиск по одной лишь папке, сдедать БД для файлов
+//        TODO: если не проканает поиск по одной лишь папке, сделать БД для файлов
 //        executor.execute(() -> {
 //        TODO: допилить через потоки, почитать на JavaRush про них
         }

@@ -53,8 +53,6 @@ public class FrontServlet extends HttpServlet {
             }
         }
 
-
-
             fileService = new FileService();
 
     }
@@ -69,11 +67,12 @@ public class FrontServlet extends HttpServlet {
 
         if (url.equals("/")) {
 //            System.out.println(uploadPath);
-//            items = bookService.showText();
-//            req.setAttribute("Items", items.toString());
+            items = bookService.showText();
+            req.setAttribute("Items", items.toString());
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 //            Text item = new Text();
 //            req.setAttribute(Constants.ITEM, item);
+
 
 
         }
@@ -88,11 +87,16 @@ public class FrontServlet extends HttpServlet {
 
                     bookService.register(new Text(name,textURI));
 //                    resp.sendRedirect("/");
-                    items = bookService.showText();
-                    req.setAttribute("Items", items);
-                    System.out.println(bookService.showText().toString());
-
+//                    items = bookService.showText();
+//                    req.setAttribute("Items", items);
+                    resp.sendRedirect(req.getContextPath());
                 }
+                if (action.equals("search")) {
+                    String searchingPhrase = req.getParameter("phrase");
+                    req.setAttribute("File", bookService.search(uploadPath, searchingPhrase));
+                    req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+
+               }
             }
 
          req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
