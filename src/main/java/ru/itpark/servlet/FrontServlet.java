@@ -101,7 +101,7 @@ public class FrontServlet extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
     }
 }
-
+//TODO: Поиск добить, убрать ДБ
 //TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
 
 
