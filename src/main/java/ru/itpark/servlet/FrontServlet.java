@@ -33,14 +33,14 @@ public class FrontServlet extends HttpServlet {
 
 
     @Override
-    public void init()  {
+    public void init() {
         try {
             context = new InitialContext();
             dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
         } catch (NamingException e) {
             e.printStackTrace();
         }
-            bookService = new BookService(new RepositoryJdbcImpl(dataSource));
+        bookService = new BookService(new RepositoryJdbcImpl(dataSource));
 //        TODO: а можно через lookup создать объект с указанием аргументов?
 
         uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
@@ -53,7 +53,7 @@ public class FrontServlet extends HttpServlet {
             }
         }
 
-            fileService = new FileService();
+        fileService = new FileService();
 
     }
 
@@ -74,44 +74,36 @@ public class FrontServlet extends HttpServlet {
 //            req.setAttribute(Constants.ITEM, item);
 
 
-
         }
-            if (req.getMethod().equals("POST")) {
-                String action = req.getParameter("action");
+        if (req.getMethod().equals("POST")) {
+            String action = req.getParameter("action");
 
-                if (action.equals("save")) {
+            if (action.equals("save")) {
 //                    String fileName = req.getParameter("name");
-                    Part file = req.getPart("file");
-                    String name = file.getSubmittedFileName();
-                   String textURI = fileService.writeFile(uploadPath, file);
+                Part file = req.getPart("file");
+                String name = file.getSubmittedFileName();
+                String textURI = fileService.writeFile(uploadPath, file);
 
-                    bookService.register(new Text(name,textURI));
+                bookService.register(new Text(name, textURI));
 //                    resp.sendRedirect("/");
 //                    items = bookService.showText();
 //                    req.setAttribute("Items", items);
-                    resp.sendRedirect(req.getContextPath());
-                }
-                if (action.equals("search")) {
-                    String searchingPhrase = req.getParameter("phrase");
-                    req.setAttribute("File", bookService.search(uploadPath, searchingPhrase));
-                    req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
-
-               }
+                resp.sendRedirect(req.getContextPath());
             }
+            if (action.equals("search")) {
+                String searchingPhrase = req.getParameter("phrase");
+                Path path = bookService.search(uploadPath, searchingPhrase);
+                req.setAttribute("File", path.toString());
+                req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 
-         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
+            }
+        }
+
+        req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
     }
 }
 
 //TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
-
-
-
-
-
-
-
-
 
 
 //package ru.itpark.servlet;
