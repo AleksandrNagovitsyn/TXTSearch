@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -33,14 +34,14 @@ public class FrontServlet extends HttpServlet {
 
 
     @Override
-    public void init()  {
+    public void init() {
         try {
             context = new InitialContext();
             dataSource = (DataSource) context.lookup("java:/comp/env/jdbc/db");
         } catch (NamingException e) {
             e.printStackTrace();
         }
-            bookService = new BookService(new RepositoryJdbcImpl(dataSource));
+        bookService = new BookService(new RepositoryJdbcImpl(dataSource));
 //        TODO: а можно через lookup создать объект с указанием аргументов?
 
         uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
@@ -53,9 +54,7 @@ public class FrontServlet extends HttpServlet {
             }
         }
 
-
-
-            fileService = new FileService();
+        fileService = new FileService();
 
     }
 
@@ -63,7 +62,6 @@ public class FrontServlet extends HttpServlet {
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Collection<Text> items;
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
@@ -77,37 +75,34 @@ public class FrontServlet extends HttpServlet {
 
 
         }
-            if (req.getMethod().equals("POST")) {
-                String action = req.getParameter("action");
+        if (req.getMethod().equals("POST")) {
+            String action = req.getParameter("action");
 
-                if (action.equals("save")) {
+            if (action.equals("save")) {
 //                    String fileName = req.getParameter("name");
-                    Part file = req.getPart("file");
-                    String name = file.getSubmittedFileName();
-                   String textURI = fileService.writeFile(uploadPath, file);
-
-                    bookService.register(new Text(name,textURI));
+                Part file = req.getPart("file");
+                String name = file.getSubmittedFileName();
+                fileService.writeFile(uploadPath, file);
 //                    resp.sendRedirect("/");
-                    items = bookService.showText();
-                    req.setAttribute("Items", items);
-                    System.out.println(bookService.showText().toString());
-
-                }
+//                    items = bookService.showText();
+//                    req.setAttribute("Items", items);
+                resp.sendRedirect(req.getContextPath());
             }
+        }
+         if (req.getMethod().equals("GET"))   {
+            if (url.equals("/search")) {
+                String q = req.getParameter("q");
+                List<String> strings = bookService.showFounded(uploadPath, q);
+                req.setAttribute("Strings", strings);
+                req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+            }
+        }
 
-         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
     }
 }
-
+//TODO: Поиск добить, убрать ДБ
 //TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
-
-
-
-
-
-
-
-
 
 
 //package ru.itpark.servlet;

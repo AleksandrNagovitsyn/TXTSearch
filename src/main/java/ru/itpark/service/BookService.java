@@ -6,13 +6,17 @@ import ru.itpark.repository.Repository;
 import javax.naming.NamingException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BookService {
 
@@ -31,41 +35,45 @@ public class BookService {
         }
     }
 
-    public Collection<Text> showText() {
-        Collection<Text> searchedText = new HashSet<>(currentRepository.getAll());
-        return searchedText;
-    }
-
-    public void register(Text text) {
-        currentRepository.save(text);
-    }
+//    public Collection<Text> showText() {
+//        Collection<Text> searchedText = new HashSet<>(currentRepository.getAll());
+//        return searchedText;
+//    }
+//    public void register(Text text) {
+//        currentRepository.save(text);
+//    }
 
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
-        Path createdFile = Files.createFile(path.resolve("exitTXT"+id));
-        List<Text> texts = currentRepository.getAll();
-        for (Text text : texts) {
-            String textURI = text.getTextURI();
-            Scanner scanner = new Scanner(textURI);
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine();
-                if (line.contains(searchingString)) {
-                    Files.writeString(createdFile, line);
+        Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
+//        FIXME: Надо будет создать отдельную папку
+        List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
+                .collect(Collectors.toList());
+        System.out.println(pathOfTexts.toString());
+        for (Path pathOfText : pathOfTexts) {
+            if (Files.exists(pathOfText)) {
+                List<String> strings = Files.readAllLines(pathOfText)
+                        .stream()
+                        .filter(o -> o.contains(searchingString))
+                        .collect(Collectors.toList());
+                System.out.println(strings.toString());
+                for (String string : strings) {
+                        Files.writeString(createdFile, string);
+                    }
                 }
-
             }
-
-//        TODO: если не проканает поиск по одной лишь папке, сдедать БД для файлов
+//        TODO: если не проканает поиск по одной лишь папке, сделать БД для файлов
 //        executor.execute(() -> {
 //        TODO: допилить через потоки, почитать на JavaRush про них
-        }
         return createdFile;
     }
+
+    public List<String> showFounded (Path path, String searchingString) throws IOException {
+         List <String> founded = Files.readAllLines(search(path, searchingString));
+         return  founded;
+
+    }
 }
-
-
-
-
 
 
 //package ru.itpark.service;
