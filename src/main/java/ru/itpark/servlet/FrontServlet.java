@@ -79,12 +79,7 @@ public class FrontServlet extends HttpServlet {
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
-//            System.out.println(uploadPath);
-//            items = bookService.showText();
-//            req.setAttribute("Items", items.toString());
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
-//            Text item = new Text();
-//            req.setAttribute(Constants.ITEM, item);
             req.setAttribute(Constants.STRINGS, strings);
 
 
@@ -112,7 +107,7 @@ public class FrontServlet extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
     }
 }
-//TODO: Поиск добить, убрать ДБ
+//TODO: Сделать БД по очередям + страница задач
 //TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
 
 
