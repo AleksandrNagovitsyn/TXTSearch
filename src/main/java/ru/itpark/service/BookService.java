@@ -45,6 +45,7 @@ public class BookService {
 
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
+
         Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
         List<String> founded = new ArrayList<>();
 //        FIXME: Надо будет создать отдельную папку

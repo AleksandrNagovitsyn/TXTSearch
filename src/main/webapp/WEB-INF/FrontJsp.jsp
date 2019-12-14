@@ -17,28 +17,45 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <%@include file="bootstrap.jsp" %>
+    <style>
+        body {
+            background: aliceblue url("/old-book.jpg");
+        }
+    </style>
     <title>TXTSearcher</title>
 </head>
-<body>
+<body bgcolor="#c0c0c0" background="old-book.jpg">
 
-<form action="<%= request.getContextPath()%>/search" method="get" enctype="multipart/form-data">
-    <input type="hidden" name = "action" value="search">
-    <input type="text" placeholder="Введите искомую фразу" name="q" value = "<%= request.getAttribute("Strings") == null?"": request.getAttribute("Strings")%>">
-</form>
+<div class="container">
+
+    <h1 class="page-header">Добро пожаловать На TXTSearchService!</h1>
+
+    <form action="<%= request.getContextPath()%>/search" method="get" enctype="multipart/form-data">
+        <div class="form-group">
+            <input type="hidden" name="action" class="form-control" value="search">
+        </div>
+        <div class="form-group">
+            <input type="text" placeholder="Введите искомую фразу" class="form-control" name="q"
+                   value="<%= request.getAttribute("Strings") == null?"": request.getAttribute("Strings")%>">
+        </div>
+    </form>
 
 
-<form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="action" value="save">
-    <input type="file" name = "file" accept="text/plain">
-    <button>Загрузить</button>
-</form>
+    <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <input type="hidden" name="action" value="save">
+        </div>
+        <div class="form-group">
+            <input type="file" name="file" class="form-control-file" accept="text/plain">
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Загрузить</button>
+        </div>
+    </form>
+</div>
 </body>
 </html>
-
-
-
-
-
 
 
 <%--<%@ page import="ru.itpark.model.House" %>--%>

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class FrontServlet extends HttpServlet {
     private BookService bookService;
     private FileService fileService;
     private Path uploadPath;
+    private Path exitDirectory;
     private DataSource dataSource;
     private InitialContext context;
     private List <String> strings;
@@ -46,7 +48,6 @@ public class FrontServlet extends HttpServlet {
 //        TODO: а можно через lookup создать объект с указанием аргументов?
 
         uploadPath = Paths.get(System.getenv("UPLOAD_PATH"));
-//        FIXME: если переменной присваивать значение в сервис классе, не работает. Поэкспреременитровать
         if (Files.notExists(uploadPath)) {
             try {
                 Files.createDirectory(uploadPath);
@@ -54,8 +55,19 @@ public class FrontServlet extends HttpServlet {
                 ex.printStackTrace();
             }
         }
+        exitDirectory = Paths.get(System.getenv("RESULTS"));
+        if (Files.notExists(exitDirectory)) {
+            try {
+                Files.createDirectory(exitDirectory);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         fileService = new FileService();
+        strings = new ArrayList<>();
+
+
 
     }
 
@@ -82,21 +94,16 @@ public class FrontServlet extends HttpServlet {
             String action = req.getParameter("action");
 
             if (action.equals("save")) {
-//                    String fileName = req.getParameter("name");
                 Part file = req.getPart("file");
                 String name = file.getSubmittedFileName();
                 fileService.writeFile(uploadPath, file);
-//                    resp.sendRedirect("/");
-//                    items = bookService.showText();
-//                    req.setAttribute("Items", items);
                 resp.sendRedirect(req.getContextPath());
             }
         }
          if (req.getMethod().equals("GET"))   {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
-                strings = bookService.showFounded(uploadPath, q);
-//                System.out.println(strings);
+                strings = bookService.showFounded(exitDirectory, q);
                 req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
