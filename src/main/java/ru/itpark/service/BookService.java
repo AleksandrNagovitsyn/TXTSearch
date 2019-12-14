@@ -46,22 +46,23 @@ public class BookService {
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
         Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
+        List<String> founded = new ArrayList<>();
 //        FIXME: Надо будет создать отдельную папку
         List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                 .collect(Collectors.toList());
-        System.out.println(pathOfTexts.toString());
         for (Path pathOfText : pathOfTexts) {
             if (Files.exists(pathOfText)) {
                 List<String> strings = Files.readAllLines(pathOfText)
                         .stream()
-                        .filter(o -> o.contains(searchingString))
+                        .filter(o->o.contains(searchingString))
+
                         .collect(Collectors.toList());
-                System.out.println(strings.toString());
-                for (String string : strings) {
-                        Files.writeString(createdFile, string);
-                    }
+
+                founded.addAll(strings);
                 }
-            }
+            Files.write(createdFile, founded);
+
+        }
 //        TODO: если не проканает поиск по одной лишь папке, сделать БД для файлов
 //        executor.execute(() -> {
 //        TODO: допилить через потоки, почитать на JavaRush про них

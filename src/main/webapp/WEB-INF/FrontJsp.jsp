@@ -1,5 +1,8 @@
 <%@ page import="java.util.UUID" %>
-<%@ page import="ru.itpark.constants.Constants" %><%--
+<%@ page import="ru.itpark.constants.Constants" %>
+<%@ page import="java.io.Writer" %>
+<%@ page import="java.util.Collection" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: Александр
   Date: 02.12.2019
@@ -20,15 +23,15 @@
 
 <form action="<%= request.getContextPath()%>/search" method="get" enctype="multipart/form-data">
     <input type="hidden" name = "action" value="search">
-    <input type="text" placeholder="Введите искомую фразу" name="q" value = "<%= request.getAttribute("Strings") == null?"": request.getAttribute("String")%>">
+    <input type="text" placeholder="Введите искомую фразу" name="q" value = "<%= request.getAttribute("Strings") == null?"": request.getAttribute("Strings")%>">
 </form>
+
 
 <form action="<%= request.getContextPath() %>" method="post" enctype="multipart/form-data">
     <input type="hidden" name="action" value="save">
     <input type="file" name = "file" accept="text/plain">
     <button>Загрузить</button>
 </form>
-<p>${Strings}</p>
 </body>
 </html>
 

@@ -31,6 +31,7 @@ public class FrontServlet extends HttpServlet {
     private Path uploadPath;
     private DataSource dataSource;
     private InitialContext context;
+    private List <String> strings;
 
 
     @Override
@@ -72,6 +73,8 @@ public class FrontServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 //            Text item = new Text();
 //            req.setAttribute(Constants.ITEM, item);
+            req.setAttribute(Constants.STRINGS, strings);
+
 
 
         }
@@ -92,9 +95,10 @@ public class FrontServlet extends HttpServlet {
          if (req.getMethod().equals("GET"))   {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
-                List<String> strings = bookService.showFounded(uploadPath, q);
-                req.setAttribute("Strings", strings);
-                req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
+                strings = bookService.showFounded(uploadPath, q);
+//                System.out.println(strings);
+                req.setAttribute(Constants.STRINGS, strings);
+                req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
         }
 
@@ -106,7 +110,7 @@ public class FrontServlet extends HttpServlet {
 
 
 //package ru.itpark.servlet;
-//
+
 //        import ru.itpark.constant.Constants;
 //        import ru.itpark.model.House;
 //        import ru.itpark.service.HouseService;
