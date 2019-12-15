@@ -1,17 +1,10 @@
 package ru.itpark.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.itpark.model.Text;
-import ru.itpark.repository.Repository;
 
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 @Data
 public class FileService {

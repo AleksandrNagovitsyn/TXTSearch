@@ -1,23 +1,18 @@
 package ru.itpark.repository;
 
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import ru.itpark.exception.NamingRuntimeException;
 import ru.itpark.exception.SqlRunTimeException;
-import ru.itpark.model.Text;
+import ru.itpark.model.Query;
 import util.JdbcTemplate;
 
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
-public class RepositoryJdbcImpl implements Repository<Text> {
+public class RepositoryJdbcImpl implements Repository<Query> {
     private DataSource dataSource;
 
 //    TODO: что за datasource
@@ -27,21 +22,21 @@ public class RepositoryJdbcImpl implements Repository<Text> {
     @Override
     public void init() throws NamingException, SQLException {
 
-        JdbcTemplate.init(dataSource, "CREATE TABLE IF NOT EXISTS books " +
-                "(id TEXT PRIMARY KEY, name TEXT NOT NULL, textURI TEXT NOT NULL)");
+        JdbcTemplate.init(dataSource, "CREATE TABLE IF NOT EXISTS queries " +
+                "(id TEXT PRIMARY KEY, query TEXT NOT NULL, status TEXT NOT NULL)");
     }
 
 
     @Override
-    public List<Text> getAll() {
-        List<Text> texts;
+    public List<Query> getAll() {
+        List<Query> texts;
         try {
 
-            texts = JdbcTemplate.executeQuery(dataSource, "SELECT id, name, textURI FROM books",
-                    resultSet -> (new Text(
+            texts = JdbcTemplate.executeQuery(dataSource, "SELECT id, query, status FROM books",
+                    resultSet -> (new Query(
                             resultSet.getString("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("textURI")
+                            resultSet.getString("query"),
+                            resultSet.getString("status")
                     ))
             );
             return texts;
@@ -51,9 +46,9 @@ public class RepositoryJdbcImpl implements Repository<Text> {
     }
 
 
-    public Text save (Text text)  {
+    public Query save (Query query)  {
         try {
-            return text.getId() == null ? insert(text): update(text);
+            return query.getId() == null ? insert(query): update(query);
         } catch (NamingException e) {
             e.printStackTrace();
             throw new RuntimeException("Such ID not found");
@@ -61,23 +56,22 @@ public class RepositoryJdbcImpl implements Repository<Text> {
     }
 
 
-    public Text insert (Text text) {
-        String id = UUID.randomUUID().toString();
-        text.setId(id);
-         JdbcTemplate.insert(dataSource,"INSERT INTO books (id, name, textURI) VALUES(?, ?, ?)", (statement) -> {
-            statement.setString(1, text.getId());
-            statement.setString(2, text.getName());
-            statement.setString(3, text.getTextURI());
+    public Query insert (Query query) {
+
+         JdbcTemplate.insert(dataSource,"INSERT INTO books (id, query, status) VALUES(?, ?, ?)", (statement) -> {
+            statement.setString(1, query.getId());
+            statement.setString(2, query.getQuery());
+            statement.setString(3, query.getStatus().toString());
         });
-        return text;
+        return query;
     }
-    public Text update (Text text) throws NamingException {
-        JdbcTemplate.update(dataSource,"UPDATE books SET name =?, textURI =? WHERE id = ?", (statement) -> {
-            statement.setString(1, text.getName());
-            statement.setString(2, text.getTextURI());
-            statement.setString(3, text.getId());
+    public Query update (Query query) throws NamingException {
+        JdbcTemplate.update(dataSource,"UPDATE books SET query =?, status =? WHERE id = ?", (statement) -> {
+            statement.setString(1, query.getQuery());
+            statement.setString(2, query.getStatus().toString());
+            statement.setString(3, query.getId());
         });
-        return text;
+        return query;
     }
 
 

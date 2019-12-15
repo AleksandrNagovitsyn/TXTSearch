@@ -1,7 +1,6 @@
 package ru.itpark.servlet;
 
 import ru.itpark.constants.Constants;
-import ru.itpark.model.Text;
 import ru.itpark.repository.RepositoryJdbcImpl;
 import ru.itpark.service.BookService;
 import ru.itpark.service.FileService;
@@ -20,9 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 
 @MultipartConfig
@@ -107,7 +104,7 @@ public class FrontServlet extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
     }
 }
-//TODO: Сделать БД по очередям + страница задач
+//TODO: БД и потоки завязаны. Надо разобраться с потоками
 //TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
 
 

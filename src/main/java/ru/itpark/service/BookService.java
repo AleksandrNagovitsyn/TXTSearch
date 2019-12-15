@@ -1,14 +1,12 @@
 package ru.itpark.service;
 
-import ru.itpark.model.Text;
+import ru.itpark.enumeration.QueryStatus;
+import ru.itpark.model.Query;
 import ru.itpark.repository.Repository;
 
 import javax.naming.NamingException;
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -16,15 +14,15 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BookService {
 
-    private Repository<Text> currentRepository;
+    private Repository<Query> currentRepository;
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    int index = 1;
 
 
-    public BookService(Repository<Text> currentRepository) {
+    public BookService(Repository<Query> currentRepository) {
         this.currentRepository = currentRepository;
         try {
             currentRepository.init();
@@ -46,7 +44,12 @@ public class BookService {
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
 
-        Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
+
+
+        currentRepository.save(new Query(id, searchingString, QueryStatus.ENQUEUED));
+        index++;
+
+        Path createdFile = Files.createFile(path.resolve("exitTXT" + index));
         List<String> founded = new ArrayList<>();
         List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                 .collect(Collectors.toList());
