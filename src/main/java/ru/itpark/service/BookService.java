@@ -48,31 +48,34 @@ public class BookService {
 
         Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
         List<String> founded = new ArrayList<>();
-//        FIXME: Надо будет создать отдельную папку
         List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                 .collect(Collectors.toList());
         for (Path pathOfText : pathOfTexts) {
             if (Files.exists(pathOfText)) {
                 List<String> strings = Files.readAllLines(pathOfText)
                         .stream()
-                        .filter(o->o.contains(searchingString))
-
+                        .filter(o -> o.contains(searchingString))
                         .collect(Collectors.toList());
-
-                founded.addAll(strings);
-                }
-            Files.write(createdFile, founded);
-
+//                strings.forEach(s ->
+//                    s = pathOfText.getFileName().toString().concat(s));
+//                founded.addAll(strings);
+//                TODO: почему такой вармант не работает?
+                strings.forEach(s -> {
+                    s = ("["+pathOfText.getFileName().toString()+"] ").toUpperCase().concat(s);
+                    founded.add(s);
+                });
+            }
         }
-//        TODO: если не проканает поиск по одной лишь папке, сделать БД для файлов
 //        executor.execute(() -> {
 //        TODO: допилить через потоки, почитать на JavaRush про них
+        Files.write(createdFile, founded);
+
         return createdFile;
     }
 
-    public List<String> showFounded (Path path, String searchingString) throws IOException {
-         List <String> founded = Files.readAllLines(search(path, searchingString));
-         return  founded;
+    public List<String> showFounded(Path path, String searchingString) throws IOException {
+        List<String> founded = Files.readAllLines(search(path, searchingString));
+        return founded;
 
     }
 }

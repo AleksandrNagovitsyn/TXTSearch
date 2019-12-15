@@ -107,7 +107,6 @@ public class FrontServlet extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
     }
 }
-// TODO: запилить имена файлов в выдаче
 //TODO: Сделать БД по очередям + страница задач
 //TODO: метод по поиску добить через потоки (см пример преокта от Ильназа)
 
