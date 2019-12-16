@@ -13,6 +13,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class BookService {
@@ -47,14 +48,15 @@ public class BookService {
         currentRepository.save(new Query(id, searchingString, QueryStatus.ENQUEUED));
         Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
         List<String> founded = new ArrayList<>();
-
+        Future<?> tsk = null;
+// TODO: знаю, что нельзя
 
 
         List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                 .collect(Collectors.toList());
         for (Path pathOfText : pathOfTexts) {
             if (Files.exists(pathOfText)) {
-                executor.execute(() -> {
+                tsk = executor.submit(() -> {
                     currentRepository.save(new Query(id, searchingString, QueryStatus.INPROGRESS));
                     List<String> strings = new ArrayList<>();
                     try {
@@ -82,10 +84,17 @@ public class BookService {
 
                     });
                 });
+                executor.shutdown();
+
             }
         }
+        if (tsk.isDone()) {
+            showFounded(path, searchingString);
+        }
+
         return createdFile;
     }
+//    TODO: крашится, потетсить, почитать потоки
 
     public List<String> showFounded(Path path, String searchingString) throws IOException {
         List<String> founded = Files.readAllLines(search(path, searchingString));
