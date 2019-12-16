@@ -32,7 +32,7 @@ public class RepositoryJdbcImpl implements Repository<Query> {
         List<Query> texts;
         try {
 
-            texts = JdbcTemplate.executeQuery(dataSource, "SELECT id, query, status FROM books",
+            texts = JdbcTemplate.executeQuery(dataSource, "SELECT id, query, status FROM queries",
                     resultSet -> (new Query(
                             resultSet.getString("id"),
                             resultSet.getString("query"),

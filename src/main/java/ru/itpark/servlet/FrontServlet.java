@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 @MultipartConfig
@@ -95,7 +96,13 @@ public class FrontServlet extends HttpServlet {
          if (req.getMethod().equals("GET"))   {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
-                strings = Files.readAllLines(bookService.search(exitDirectory, q));
+                try {
+                    strings = Files.readAllLines(bookService.search(exitDirectory, q));
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 //                System.out.println(strings);
                 req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);

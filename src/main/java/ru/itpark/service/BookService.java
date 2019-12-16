@@ -11,9 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class BookService {
@@ -42,23 +40,24 @@ public class BookService {
 //        currentRepository.save(text);
 //    }
 
-    public Path search(Path path, String searchingString) throws IOException {
+    public Path search(Path path, String searchingString) throws IOException, ExecutionException, InterruptedException {
         String id = UUID.randomUUID().toString();
+//        Path createdFile;
 
-        currentRepository.save(new Query(id, searchingString, QueryStatus.ENQUEUED));
-        Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
-        List<String> founded = new ArrayList<>();
-        Future<?> tsk = null;
+
 // TODO: знаю, что нельзя
+        Future<Path> tsk = executor.submit(() -> {
 
+            Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
 
-        List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
-                .collect(Collectors.toList());
-        for (Path pathOfText : pathOfTexts) {
-            if (Files.exists(pathOfText)) {
-                tsk = executor.submit(() -> {
-                    currentRepository.save(new Query(id, searchingString, QueryStatus.INPROGRESS));
-                    List<String> strings = new ArrayList<>();
+            List<String> founded = new ArrayList<>();
+
+            List<String> strings = new ArrayList<>();
+            List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
+                    .collect(Collectors.toList());
+            for (Path pathOfText : pathOfTexts) {
+                if (Files.exists(pathOfText)) {
+
                     try {
                         strings = Files.readAllLines(pathOfText)
                                 .stream()
@@ -67,41 +66,24 @@ public class BookService {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//                strings.forEach(s ->
-//                    s = pathOfText.getFileName().toString().concat(s));
-//                founded.addAll(strings);
-//                TODO: почему такой вармант не работает?
                     strings.forEach(s -> {
-                        s = ("["+pathOfText.getFileName().toString()+"] ").toUpperCase().concat(s);
+                        s = ("[" + pathOfText.getFileName().toString() + "] ").toUpperCase().concat(s);
                         founded.add(s);
-                        try {
-                            Files.write(createdFile, founded);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        currentRepository.save(new Query (id, searchingString, QueryStatus.DONE));
-
-
                     });
-                });
-                executor.shutdown();
-
+                }
             }
-        }
-        if (tsk.isDone()) {
-            showFounded(path, searchingString);
-        }
+            try {
+                Files.write(createdFile, founded);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        return createdFile;
-    }
-//    TODO: крашится, потетсить, почитать потоки
+            return createdFile;
+        });
+        System.out.println(tsk.get());
+        return tsk.get();
 
-    public List<String> showFounded(Path path, String searchingString) throws IOException {
-        List<String> founded = Files.readAllLines(search(path, searchingString));
-        System.out.println(founded);
-        return founded;
-//        TODO: здесь косяк, файл не успевает записаться. Надо сделать так, чтобы ждал
-
+//TODO: крашится на БД
     }
 }
 
