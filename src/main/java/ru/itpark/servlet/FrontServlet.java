@@ -96,6 +96,7 @@ public class FrontServlet extends HttpServlet {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
                 strings = bookService.showFounded(exitDirectory, q);
+//                System.out.println(strings);
                 req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }

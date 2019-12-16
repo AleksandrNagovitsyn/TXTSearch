@@ -19,7 +19,7 @@ public class BookService {
 
     private Repository<Query> currentRepository;
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    int index = 1;
+    static int index = 0;
 
 
     public BookService(Repository<Query> currentRepository) {
@@ -33,10 +33,10 @@ public class BookService {
         }
     }
 
-//    public Collection<Text> showText() {
-//        Collection<Text> searchedText = new HashSet<>(currentRepository.getAll());
-//        return searchedText;
-//    }
+    public Collection<Query> showQuery() {
+        List<Query> allQueries = new ArrayList<>(currentRepository.getAll());
+        return allQueries;
+    }
 //    public void register(Text text) {
 //        currentRepository.save(text);
 //    }
@@ -44,41 +44,54 @@ public class BookService {
     public Path search(Path path, String searchingString) throws IOException {
         String id = UUID.randomUUID().toString();
 
-
-
         currentRepository.save(new Query(id, searchingString, QueryStatus.ENQUEUED));
-        index++;
-
-        Path createdFile = Files.createFile(path.resolve("exitTXT" + index));
+        Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
         List<String> founded = new ArrayList<>();
+
+
+
         List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                 .collect(Collectors.toList());
         for (Path pathOfText : pathOfTexts) {
             if (Files.exists(pathOfText)) {
-                List<String> strings = Files.readAllLines(pathOfText)
-                        .stream()
-                        .filter(o -> o.contains(searchingString))
-                        .collect(Collectors.toList());
+                executor.execute(() -> {
+                    currentRepository.save(new Query(id, searchingString, QueryStatus.INPROGRESS));
+                    List<String> strings = new ArrayList<>();
+                    try {
+                        strings = Files.readAllLines(pathOfText)
+                                .stream()
+                                .filter(o -> o.toLowerCase().contains(searchingString.toLowerCase()))
+                                .collect(Collectors.toList());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 //                strings.forEach(s ->
 //                    s = pathOfText.getFileName().toString().concat(s));
 //                founded.addAll(strings);
 //                TODO: почему такой вармант не работает?
-                strings.forEach(s -> {
-                    s = ("["+pathOfText.getFileName().toString()+"] ").toUpperCase().concat(s);
-                    founded.add(s);
+                    strings.forEach(s -> {
+                        s = ("["+pathOfText.getFileName().toString()+"] ").toUpperCase().concat(s);
+                        founded.add(s);
+                        try {
+                            Files.write(createdFile, founded);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        currentRepository.save(new Query (id, searchingString, QueryStatus.DONE));
+
+
+                    });
                 });
             }
         }
-//        executor.execute(() -> {
-//        TODO: допилить через потоки, почитать на JavaRush про них
-        Files.write(createdFile, founded);
-
         return createdFile;
     }
 
     public List<String> showFounded(Path path, String searchingString) throws IOException {
         List<String> founded = Files.readAllLines(search(path, searchingString));
+        System.out.println(founded);
         return founded;
+//        TODO: здесь косяк, файл не успевает записаться. Надо сделать так, чтобы ждал
 
     }
 }

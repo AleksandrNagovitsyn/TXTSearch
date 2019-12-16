@@ -58,7 +58,7 @@ public class RepositoryJdbcImpl implements Repository<Query> {
 
     public Query insert (Query query) {
 
-         JdbcTemplate.insert(dataSource,"INSERT INTO books (id, query, status) VALUES(?, ?, ?)", (statement) -> {
+         JdbcTemplate.insert(dataSource,"INSERT INTO queries (id, query, status) VALUES(?, ?, ?)", (statement) -> {
             statement.setString(1, query.getId());
             statement.setString(2, query.getQuery());
             statement.setString(3, query.getStatus().toString());
@@ -66,7 +66,7 @@ public class RepositoryJdbcImpl implements Repository<Query> {
         return query;
     }
     public Query update (Query query) throws NamingException {
-        JdbcTemplate.update(dataSource,"UPDATE books SET query =?, status =? WHERE id = ?", (statement) -> {
+        JdbcTemplate.update(dataSource,"UPDATE queries SET query =?, status =? WHERE id = ?", (statement) -> {
             statement.setString(1, query.getQuery());
             statement.setString(2, query.getStatus().toString());
             statement.setString(3, query.getId());
