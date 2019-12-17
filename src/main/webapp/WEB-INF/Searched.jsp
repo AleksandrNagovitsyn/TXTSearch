@@ -62,6 +62,7 @@
     <%}%>
     <% if (query.getStatus() == QueryStatus.DONE) {%>
     <p>Статус: готово</p>
+    <a href = "<%= request.getContextPath()%>/download/<%= query.getId()%>" download="">Скачать</a>
     <%}%>
     <%}%>
 

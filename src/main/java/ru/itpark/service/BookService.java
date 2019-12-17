@@ -51,7 +51,7 @@ public class BookService {
             currentStatus = query.getStatus().toString();
             currentRepository.save(query);
 
-            Path createdFile = Files.createFile(path.resolve("exitTXT" + query.getId()));
+            Path createdFile = Files.createFile(path.resolve(query.getId()));
 
             List<String> founded = new ArrayList<>();
 

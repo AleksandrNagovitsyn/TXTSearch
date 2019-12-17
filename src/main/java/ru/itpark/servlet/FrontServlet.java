@@ -99,7 +99,9 @@ public class FrontServlet extends HttpServlet {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
                 try {
-                    bookService.search(exitDirectory, q);
+                    Path pathOfResult = bookService.search(exitDirectory, q);
+
+                    req.setAttribute(Constants.PATH, exitDirectory.resolve(pathOfResult.getFileName()));
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
