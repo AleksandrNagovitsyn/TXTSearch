@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="ru.itpark.constants.Constants" %>
-<%@ page import="ru.itpark.model.Query" %><%--
+<%@ page import="ru.itpark.model.Query" %>
+<%@ page import="ru.itpark.enumeration.QueryStatus" %><%--
   Created by IntelliJ IDEA.
   User: Александр
   Date: 14.12.2019
@@ -52,8 +53,18 @@
 
 
     <% for (Query query:(List<Query>)request.getAttribute(Constants.ITEMS)) {%>
-    <p><%=query.toString()%></p>
+    <p>Поисковый запрос: <%=query.getQuery()%></p>
+    <% if (query.getStatus() == QueryStatus.ENQUEUED) {%>
+    <p>Статус: в очереди</p>
+    <% }%>
+    <% if (query.getStatus() == QueryStatus.INPROGRESS) {%>
+    <p>Статус : идет поиск</p>
     <%}%>
+    <% if (query.getStatus() == QueryStatus.DONE) {%>
+    <p>Статус: готово</p>
+    <%}%>
+    <%}%>
+
 
 </div>
 
