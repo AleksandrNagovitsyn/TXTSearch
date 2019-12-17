@@ -12,17 +12,20 @@ import java.nio.file.Paths;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BookService {
 
     private Repository<Query> currentRepository;
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     static int index = 0;
+    String currentStatus;
 
 
     public BookService(Repository<Query> currentRepository) {
-        this.currentRepository = currentRepository;
+//        this.currentRepository = currentRepository;
         try {
             currentRepository.init();
         } catch (NamingException e) {
@@ -36,22 +39,20 @@ public class BookService {
         List<Query> allQueries = new ArrayList<>(currentRepository.getAll());
         return allQueries;
     }
-//    public void register(Text text) {
-//        currentRepository.save(text);
-//    }
 
     public Path search(Path path, String searchingString) throws IOException, ExecutionException, InterruptedException {
-        String id = UUID.randomUUID().toString();
-//        Path createdFile;
+        Query query = new Query(searchingString, QueryStatus.ENQUEUED);
+        currentRepository.save(query);
+        currentStatus = query.getStatus().toString();
+        System.out.println(query);
 
-
-// TODO: знаю, что нельзя
         Future<Path> tsk = executor.submit(() -> {
-
-            Query query = new Query(searchingString, QueryStatus.ENQUEUED);
+            query.setStatus(QueryStatus.INPROGRESS);
+            currentStatus = query.getStatus().toString();
             currentRepository.save(query);
+            System.out.println(query);
 
-            Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
+            Path createdFile = Files.createFile(path.resolve("exitTXT" + query.getId()));
 
             List<String> founded = new ArrayList<>();
 
@@ -80,13 +81,24 @@ public class BookService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+//            query.setStatus(QueryStatus.DONE);
+//            currentRepository.save(query);
+//            System.out.println(query);
 
             return createdFile;
         });
-        System.out.println(tsk.get());
+
+        while (!tsk.isDone()) {
+            currentStatus = query.getStatus().toString();
+        }
+        query.setStatus(QueryStatus.DONE);
+        currentRepository.save(query);
+        System.out.println(query);
+
         return tsk.get();
 
-//TODO: крашится на БД
+//        TODO: сделать отображение задач
+
     }
 }
 

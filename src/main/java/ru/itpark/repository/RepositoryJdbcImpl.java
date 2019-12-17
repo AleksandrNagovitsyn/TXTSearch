@@ -57,6 +57,8 @@ public class RepositoryJdbcImpl implements Repository<Query> {
 
 
     public Query insert (Query query) {
+        String id = UUID.randomUUID().toString();
+        query.setId(id);
 
          JdbcTemplate.insert(dataSource,"INSERT INTO queries (id, query, status) VALUES(?, ?, ?)", (statement) -> {
             statement.setString(1, query.getId());
