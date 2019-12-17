@@ -48,6 +48,9 @@ public class BookService {
 // TODO: знаю, что нельзя
         Future<Path> tsk = executor.submit(() -> {
 
+            Query query = new Query(searchingString, QueryStatus.ENQUEUED);
+            currentRepository.save(query);
+
             Path createdFile = Files.createFile(path.resolve("exitTXT" + id));
 
             List<String> founded = new ArrayList<>();

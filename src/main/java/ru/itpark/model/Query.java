@@ -15,10 +15,10 @@ public class Query {
     private QueryStatus status;
 
 
-//    public Query(QueryStatus status, String query) {
-//        this.status = status;
-//        this.query = query;
-//    }
+    public Query(String query, QueryStatus status) {
+        this.status = status;
+        this.query = query;
+    }
 
 
     public Query(String id, String query,String status) {
