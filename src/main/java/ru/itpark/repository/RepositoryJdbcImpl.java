@@ -47,7 +47,6 @@ public class RepositoryJdbcImpl implements Repository<Query> {
 
 
     public Query save (Query query)  {
-        System.out.println(query);
         try {
             return query.getId() == null ? insert(query): update(query);
         } catch (NamingException e) {

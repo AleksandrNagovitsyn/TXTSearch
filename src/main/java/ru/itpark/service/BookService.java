@@ -35,7 +35,7 @@ public class BookService {
         }
     }
 
-    public Collection<Query> showQuery() {
+    public List<Query> showQuery() {
         List<Query> allQueries = new ArrayList<>(currentRepository.getAll());
         return allQueries;
     }
@@ -50,7 +50,6 @@ public class BookService {
             query.setStatus(QueryStatus.INPROGRESS);
             currentStatus = query.getStatus().toString();
             currentRepository.save(query);
-            System.out.println(query);
 
             Path createdFile = Files.createFile(path.resolve("exitTXT" + query.getId()));
 

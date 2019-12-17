@@ -1,5 +1,6 @@
 <%@ page import="java.util.List" %>
-<%@ page import="ru.itpark.constants.Constants" %><%--
+<%@ page import="ru.itpark.constants.Constants" %>
+<%@ page import="ru.itpark.model.Query" %><%--
   Created by IntelliJ IDEA.
   User: Александр
   Date: 14.12.2019
@@ -50,8 +51,8 @@
 
 
 
-    <% for (String string:(List<String>)request.getAttribute(Constants.STRINGS)) {%>
-    <p><%=string%></p>
+    <% for (Query query:(List<Query>)request.getAttribute(Constants.ITEMS)) {%>
+    <p><%=query.toString()%></p>
     <%}%>
 
 </div>

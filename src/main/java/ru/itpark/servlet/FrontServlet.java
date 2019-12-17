@@ -1,6 +1,7 @@
 package ru.itpark.servlet;
 
 import ru.itpark.constants.Constants;
+import ru.itpark.model.Query;
 import ru.itpark.repository.RepositoryJdbcImpl;
 import ru.itpark.service.BookService;
 import ru.itpark.service.FileService;
@@ -32,6 +33,7 @@ public class FrontServlet extends HttpServlet {
     private DataSource dataSource;
     private InitialContext context;
     private List <String> strings;
+    private List <Query> items;
 
 
     @Override
@@ -97,12 +99,24 @@ public class FrontServlet extends HttpServlet {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
                 try {
-                    strings = Files.readAllLines(bookService.search(exitDirectory, q));
+                    bookService.search(exitDirectory, q);
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                items = bookService.showQuery();
+
+                req.setAttribute(Constants.ITEMS, items);
+
+
+//                try {
+//                    strings = Files.readAllLines(bookService.search(exitDirectory, q));
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
 //                System.out.println(strings);
                 req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
