@@ -7,9 +7,6 @@
     <groupId>ru.itpark</groupId>
     <artifactId>txtsearch</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>jdbc-template</module>
-    </modules>
     <packaging>pom</packaging>
 
     <properties>
@@ -17,7 +14,11 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
-<!--    <repositories>-->
+    <modules>
+        <module>jdbc-template</module>
+    </modules>
+
+    <!--    <repositories>-->
 <!--        <repository>-->
 <!--            <id>github</id>-->
 <!--            <url>https://maven.pkg.github.com/AleksandrNagovitsyn/JDBCTemplate</url>-->
@@ -53,6 +54,12 @@
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.28.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.itpark</groupId>
+            <artifactId>jdbc-template</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
