@@ -38,8 +38,8 @@
             <input type="hidden" name="action" class="form-control" value="search">
         </div>
         <div class="form-group">
-            <input type="text" placeholder="Введите искомую фразу" class="form-control" name="q"
-                   value="<%= request.getAttribute("Strings") == null?"": request.getAttribute("Strings")%>">
+            <input type="text"  class ="form-control form-control-lg" placeholder="Введите искомую фразу" class="form-control" name="q"
+                      value="<%= request.getAttribute("Strings") == null?"": request.getAttribute("Strings")%>">
         </div>
     </form>
 
@@ -48,10 +48,13 @@
         <div class="form-group">
             <input type="hidden" name="action" value="save">
         </div>
-        <div class="form-group">
-            <input type="file" name="file" class="form-control-file" accept="text/plain">
+        <div class="custom-file">
+            <input type="file" name="file" id = "File" class="form-file-input" accept="text/plain">
+
+            <label class="custom-file-label" for="File">Выбирет файл для загрузки на сервер</label>
         </div>
-        <div class="form-group">
+
+        <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Загрузить</button>
         </div>
     </form>

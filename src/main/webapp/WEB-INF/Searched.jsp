@@ -68,17 +68,16 @@
         <div class="form-group">
             <input type="hidden" name="action" value="save">
         </div>
-        <div class="form-group">
-            <input type="file" name="file" class="form-control-file" accept="text/plain">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Загрузить</button>
-        </div>
+<%--        <div class="form-group">--%>
+<%--            <input type="file" name="file" class="form-control-file" accept="text/plain">--%>
+<%--        </div>--%>
+<%--        <div class="form-group">--%>
+<%--            <button type="submit" class="btn btn-primary">Загрузить</button>--%>
+<%--        </div>--%>
     </form>
     </div>
 
-
-
+<h3>Результаты</h3>
     <% for (Query query : (List<Query>) request.getAttribute(Constants.ITEMS)) {%>
     <div class="card">
         <div class="card-body">
