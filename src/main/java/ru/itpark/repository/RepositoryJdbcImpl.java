@@ -3,7 +3,7 @@ package ru.itpark.repository;
 import lombok.AllArgsConstructor;
 import ru.itpark.exception.SqlRunTimeException;
 import ru.itpark.model.Query;
-import util.JdbcTemplate;
+import ru.itpark.util.JdbcTemplate;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
