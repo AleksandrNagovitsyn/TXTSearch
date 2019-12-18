@@ -29,6 +29,8 @@
 
 <div class="container">
 
+
+
     <h1 class="page-header">Добро пожаловать На TXTSearchService!</h1>
 
     <form action="<%= request.getContextPath()%>/search" method="get" enctype="multipart/form-data">
