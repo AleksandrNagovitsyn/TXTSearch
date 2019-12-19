@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import org.sqlite.JDBC;
 import ru.itpark.exception.SqlRunTimeException;
 import ru.itpark.model.Query;
-import util.JdbcTemplate;
+import ru.itpark.util.JdbcTemplate;
+
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
