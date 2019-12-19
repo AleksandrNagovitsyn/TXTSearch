@@ -1,4 +1,4 @@
-package ru.itpark.exception;
+package exception;
 
 public class NoDataAccessException extends RuntimeException {
     public NoDataAccessException() {

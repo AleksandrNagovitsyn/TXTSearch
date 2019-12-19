@@ -1,6 +1,7 @@
-package ru.itpark.util;
+package util;
 
-import ru.itpark.exception.NoDataAccessException;
+
+import exception.NoDataAccessException;
 
 import javax.sql.DataSource;
 import java.sql.*;

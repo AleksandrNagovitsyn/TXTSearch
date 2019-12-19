@@ -1,9 +1,10 @@
 package ru.itpark.repository;
 
 import lombok.AllArgsConstructor;
+import org.sqlite.JDBC;
 import ru.itpark.exception.SqlRunTimeException;
 import ru.itpark.model.Query;
-import ru.itpark.util.JdbcTemplate;
+import util.JdbcTemplate;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -15,12 +16,15 @@ import java.util.UUID;
 public class RepositoryJdbcImpl implements Repository<Query> {
     private DataSource dataSource;
 
+
 //    TODO: что за datasource
 //    TODO: ВАЖНО одно из двух используем , либо датасоурс, либо jdbc template? А ЧТО И ПОЧЕМУ ЛУЧШЕ?
 
 
     @Override
     public void init() throws NamingException, SQLException {
+
+
 
         JdbcTemplate.init(dataSource, "CREATE TABLE IF NOT EXISTS queries " +
                 "(id TEXT PRIMARY KEY, query TEXT NOT NULL, status TEXT NOT NULL)");

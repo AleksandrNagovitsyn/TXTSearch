@@ -1,4 +1,4 @@
-package ru.itpark.util;
+package util;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
