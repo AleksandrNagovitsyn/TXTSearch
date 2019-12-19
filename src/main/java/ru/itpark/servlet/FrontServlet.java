@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 
 @MultipartConfig
@@ -75,10 +76,14 @@ public class FrontServlet extends HttpServlet {
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+
         req.setCharacterEncoding("UTF-8");
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
+            req.setAttribute("Up", uploadPath.toString());
+
+
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
             req.setAttribute(Constants.STRINGS, strings);
 

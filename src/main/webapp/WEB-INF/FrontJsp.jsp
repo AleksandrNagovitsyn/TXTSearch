@@ -55,6 +55,8 @@
 
         </div>
 
+        <p><%=request.getAttribute("Up")%></p>
+
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Загрузить</button>
