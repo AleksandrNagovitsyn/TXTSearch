@@ -81,7 +81,7 @@ public class FrontServlet extends HttpServlet {
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
-            req.setAttribute("Up", uploadPath.toString());
+            req.setAttribute("Up", Files.list(uploadPath).collect(Collectors.toList()).toString());
 
 
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
