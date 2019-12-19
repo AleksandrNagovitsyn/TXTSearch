@@ -2,7 +2,8 @@
 <%@ page import="ru.itpark.constants.Constants" %>
 <%@ page import="java.io.Writer" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.nio.file.Path" %><%--
   Created by IntelliJ IDEA.
   User: Александр
   Date: 02.12.2019
@@ -54,8 +55,11 @@
             <label class="custom-file-label" for="File">Выбирет файл для загрузки на сервер</label>
 
         </div>
+        <h3>В наличии следующие файлы:</h3>
+        <%for (Path path: (List<Path>)request.getAttribute("Up")) {%>
+        <p><%=path%></p>
+        <%}%>
 
-        <p><%=request.getAttribute("Up")%></p>
 
 
         <div class="form-group mt-3">
