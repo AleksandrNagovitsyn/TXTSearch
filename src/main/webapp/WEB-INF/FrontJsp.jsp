@@ -52,7 +52,9 @@
             <input type="file" name="file" id = "File" class="form-file-input" accept="text/plain" multiple>
 
             <label class="custom-file-label" for="File">Выбирет файл для загрузки на сервер</label>
+
         </div>
+
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Загрузить</button>
