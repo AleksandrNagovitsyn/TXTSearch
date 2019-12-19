@@ -49,7 +49,7 @@
             <input type="hidden" name="action" value="save">
         </div>
         <div class="custom-file">
-            <input type="file" name="file" id = "File" class="form-file-input" accept="text/plain">
+            <input type="file" name="file" id = "File" class="form-file-input" accept="text/plain" multiple>
 
             <label class="custom-file-label" for="File">Выбирет файл для загрузки на сервер</label>
         </div>
