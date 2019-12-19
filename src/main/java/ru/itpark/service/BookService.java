@@ -27,7 +27,7 @@ public class BookService {
     public BookService(Repository<Query> currentRepository) {
         this.currentRepository = currentRepository;
         try {
-            currentRepository.init();
+            this.currentRepository.init();
         } catch (NamingException e) {
             e.printStackTrace();
         } catch (SQLException e) {
