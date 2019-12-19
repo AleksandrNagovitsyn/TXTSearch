@@ -55,10 +55,6 @@
             <label class="custom-file-label" for="File">Выбирет файл для загрузки на сервер</label>
 
         </div>
-        <h3>В наличии следующие файлы:</h3>
-        <%for (Path path: (List<Path>)request.getAttribute("Up")) {%>
-        <p><%=path%></p>
-        <%}%>
 
 
 
@@ -66,6 +62,12 @@
             <button type="submit" class="btn btn-primary">Загрузить</button>
         </div>
     </form>
+
+    <h3>В наличии следующие файлы:</h3>
+    <%for (Path path: (List<Path>)request.getAttribute("Up")) {%>
+    <p><%=path%></p>
+    <%}%>
+
 </div>
 </body>
 </html>
