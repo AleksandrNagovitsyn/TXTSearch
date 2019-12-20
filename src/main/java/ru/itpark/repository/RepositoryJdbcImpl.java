@@ -10,6 +10,7 @@ import ru.itpark.util.JdbcTemplate;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Deque;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,8 +34,8 @@ public class RepositoryJdbcImpl implements Repository<Query> {
 
 
     @Override
-    public List<Query> getAll() {
-        List<Query> texts;
+    public Deque<Query> getAll() {
+        Deque<Query> texts;
         try {
 
             texts = JdbcTemplate.executeQuery(dataSource, "SELECT id, query, status FROM queries",

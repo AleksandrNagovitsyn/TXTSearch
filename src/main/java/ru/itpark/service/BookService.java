@@ -35,8 +35,8 @@ public class BookService {
         }
     }
 
-    public List<Query> showQuery() {
-        List<Query> allQueries = new ArrayList<>(currentRepository.getAll());
+    public Queue<Query> showQuery() {
+        Deque<Query> allQueries = new LinkedList<>(currentRepository.getAll());
         return allQueries;
     }
 

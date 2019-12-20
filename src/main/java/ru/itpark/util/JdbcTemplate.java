@@ -6,6 +6,7 @@ import ru.itpark.exception.NoDataAccessException;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,15 +28,16 @@ public interface JdbcTemplate {
 
 
 
-    public static <T> List<T> executeQuery(DataSource ds, String sql, RowMapper<T> mapper) throws SQLException {
+    public static <T> Deque<T> executeQuery(DataSource ds, String sql, RowMapper<T> mapper) throws SQLException {
         try (
                 Connection connection = ds.getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            List<T> results = new LinkedList<>();
+            Deque<T> results = new LinkedList<>() {
+            };
             while (resultSet.next()) {
-                results.add(mapper.map(resultSet));
+                results.addFirst(mapper.map(resultSet));
             }
             return results;
         }
