@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -34,6 +35,7 @@ public class FrontServlet extends HttpServlet {
     private Path exitDirectory;
     private DataSource dataSource;
     private InitialContext context;
+    private List <String> strings;
     private Queue<Query> items;
 
     private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -67,6 +69,7 @@ public class FrontServlet extends HttpServlet {
         }
 
         fileService = new FileService();
+        strings = new ArrayList<>();
 
 
 
@@ -86,7 +89,6 @@ public class FrontServlet extends HttpServlet {
 
             List <Path> files = Files.list(uploadPath).collect(Collectors.toList());
             files.forEach(o -> filesNames.add(o.getFileName()));
-            System.out.println(filesNames);
 
             req.setAttribute("Up", filesNames);
           req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
@@ -99,7 +101,9 @@ public class FrontServlet extends HttpServlet {
 
             if (action.equals("save")) {
                 Part file = req.getPart("file");
-                fileService.writeFile(uploadPath, file);
+                System.out.println(file);
+                Collection<Part> files = req.getParts();
+                fileService.writeFile(uploadPath, files);
                 resp.sendRedirect(req.getContextPath());
             }
         }
@@ -119,6 +123,7 @@ public class FrontServlet extends HttpServlet {
 
                 req.setAttribute(Constants.ITEMS, items);
 
+                req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
         }
