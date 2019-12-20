@@ -28,6 +28,8 @@ public class FileService {
 
     }
 
+
+
     public void readFile (String envPath, String id, ServletOutputStream servletOutputStream) throws IOException {
         Path path = Paths.get(envPath).resolve(id);
         Files.copy(path, servletOutputStream);
