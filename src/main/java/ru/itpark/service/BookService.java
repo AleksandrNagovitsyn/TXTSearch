@@ -40,7 +40,7 @@ public class BookService {
         return allQueries;
     }
 
-    public Path search(Path path, String searchingString) throws IOException, ExecutionException, InterruptedException {
+    public Path search(Path path, String searchingString) throws  ExecutionException, InterruptedException {
         Query query = new Query(searchingString, QueryStatus.ENQUEUED);
         currentRepository.save(query);
         currentStatus = query.getStatus().toString();
