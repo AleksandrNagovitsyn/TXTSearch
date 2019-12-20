@@ -6,8 +6,7 @@ import java.util.Deque;
 import java.util.List;
 
 public interface Repository <E> {
-    void init() throws NamingException, SQLException;
-//    TODO: убрать потом ексепшн
+    void init();
     Deque<E> getAll();
     E save (E e);
 }

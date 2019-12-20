@@ -34,7 +34,6 @@ public class FrontServlet extends HttpServlet {
     private Path exitDirectory;
     private DataSource dataSource;
     private InitialContext context;
-    private List <String> strings;
     private Queue<Query> items;
 
     private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -68,7 +67,6 @@ public class FrontServlet extends HttpServlet {
         }
 
         fileService = new FileService();
-        strings = new ArrayList<>();
 
 
 
@@ -121,7 +119,6 @@ public class FrontServlet extends HttpServlet {
 
                 req.setAttribute(Constants.ITEMS, items);
 
-                req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
         }
