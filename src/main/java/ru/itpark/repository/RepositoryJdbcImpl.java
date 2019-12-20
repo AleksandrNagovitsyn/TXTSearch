@@ -6,7 +6,6 @@ import ru.itpark.model.Query;
 import ru.itpark.util.JdbcTemplate;
 
 
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Deque;
@@ -49,12 +48,7 @@ public class RepositoryJdbcImpl implements Repository<Query> {
 
 
     public Query save (Query query)  {
-        try {
             return query.getId() == null ? insert(query): update(query);
-        } catch (NamingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Such ID not found");
-        }
     }
 
 
@@ -69,7 +63,7 @@ public class RepositoryJdbcImpl implements Repository<Query> {
         });
         return query;
     }
-    public Query update (Query query) throws NamingException {
+    public Query update (Query query) {
         JdbcTemplate.update(dataSource,"UPDATE queries SET query =?, status =? WHERE id = ?", (statement) -> {
             statement.setString(1, query.getQuery());
             statement.setString(2, query.getStatus().toString());

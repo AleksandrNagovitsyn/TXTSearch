@@ -4,12 +4,10 @@ import ru.itpark.enumeration.QueryStatus;
 import ru.itpark.model.Query;
 import ru.itpark.repository.Repository;
 
-import javax.naming.NamingException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -22,13 +20,7 @@ public class BookService {
 
     public BookService(Repository<Query> currentRepository) {
         this.currentRepository = currentRepository;
-        try {
             this.currentRepository.init();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public Queue<Query> showQuery() {
@@ -36,13 +28,17 @@ public class BookService {
         return allQueries;
     }
 
-    public Path search(Path path, String searchingString) throws ExecutionException, InterruptedException {
+    public Path search(Path path, String searchingString) throws ExecutionException, InterruptedException, IOException {
         Query query = new Query(searchingString, QueryStatus.ENQUEUED);
         currentRepository.save(query);
+
+
 
         Future<Path> tsk = executor.submit(() -> {
             query.setStatus(QueryStatus.INPROGRESS);
             currentRepository.save(query);
+
+
 
             Path createdFile = Files.createFile(path.resolve(query.getId()));
 
@@ -51,31 +47,14 @@ public class BookService {
             List<Path> pathOfTexts = Files.list(Paths.get(System.getenv("UPLOAD_PATH")))
                     .collect(Collectors.toList());
             toScan(pathOfTexts, searchingString, founded);
-//            for (Path pathOfText : pathOfTexts) {
-//                if (Files.exists(pathOfText)) {
-//
-//                    try {
-//                        strings = Files.readAllLines(pathOfText)
-//                                .stream()
-//                                .filter(o -> o.toLowerCase().contains(searchingString.toLowerCase()))
-//                                .collect(Collectors.toList());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    strings.forEach(s -> {
-//                        s = ("[" + pathOfText.getFileName().toString() + "] ").toUpperCase().concat(s);
-//                        founded.add(s);
-//                    });
-//                }
-//            }
             Files.write(createdFile, founded);
 
             return createdFile;
         });
 
         while (!tsk.isDone()) {
+
         }
-        System.out.println(tsk.isDone());
         query.setStatus(QueryStatus.DONE);
         currentRepository.save(query);
 

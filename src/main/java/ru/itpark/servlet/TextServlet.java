@@ -2,11 +2,6 @@ package ru.itpark.servlet;
 
 import ru.itpark.service.FileService;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +11,7 @@ import java.nio.file.Paths;
 public class TextServlet extends HttpServlet {
     FileService fileService;
     @Override
-    public void init() throws ServletException {
+    public void init()  {
 
         fileService = new FileService();
 

@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -67,13 +68,13 @@ public class FrontServlet extends HttpServlet {
         }
 
         fileService = new FileService();
-        strings = new ArrayList<>();
+//        strings = new ArrayList<>();
+        items = new LinkedList<>();
 
 
 
     }
 
-    //TODO: не поня лкак дебажить
     @Override
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -119,7 +120,7 @@ public class FrontServlet extends HttpServlet {
 
                 req.setAttribute(Constants.ITEMS, items);
 
-                req.setAttribute(Constants.STRINGS, strings);
+//                req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
         }

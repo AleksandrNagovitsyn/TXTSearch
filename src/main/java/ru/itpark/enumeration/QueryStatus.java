@@ -5,7 +5,6 @@ public enum QueryStatus {
     INPROGRESS,
     DONE;
 
-
     @Override
     public String toString() {
         return super.toString();
