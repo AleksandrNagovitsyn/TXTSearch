@@ -31,7 +31,7 @@
     </style>
 
 
-    <title>Document</title>
+    <title>Результаты поиска</title>
 </head>
 <body>
 <div class="container">

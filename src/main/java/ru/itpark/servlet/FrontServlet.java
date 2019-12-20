@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -38,7 +37,6 @@ public class FrontServlet extends HttpServlet {
     private List <String> strings;
     private Queue<Query> items;
 
-    private ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
 
     @Override

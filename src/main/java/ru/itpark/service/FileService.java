@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 
 @Data
 public class FileService {
-//    private Repository<Text> currentRepository;
 
 
     public String writeFile (Path path, Part file) {

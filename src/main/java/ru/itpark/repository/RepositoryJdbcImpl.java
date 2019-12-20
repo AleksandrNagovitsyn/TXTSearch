@@ -1,7 +1,6 @@
 package ru.itpark.repository;
 
 import lombok.AllArgsConstructor;
-import org.sqlite.JDBC;
 import ru.itpark.exception.SqlRunTimeException;
 import ru.itpark.model.Query;
 import ru.itpark.util.JdbcTemplate;
@@ -11,7 +10,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Deque;
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -19,12 +17,10 @@ public class RepositoryJdbcImpl implements Repository<Query> {
     private DataSource dataSource;
 
 
-//    TODO: что за datasource
-//    TODO: ВАЖНО одно из двух используем , либо датасоурс, либо jdbc template? А ЧТО И ПОЧЕМУ ЛУЧШЕ?
 
 
     @Override
-    public void init() throws NamingException, SQLException {
+    public void init()  {
 
 
 
@@ -89,37 +85,3 @@ public class RepositoryJdbcImpl implements Repository<Query> {
 
 
 
-//
-//@RequiredArgsConstructor
-//public class QueryRepositorySqliteImpl implements QueryRepository {
-//    private final DataSource dataSource;
-//
-//    @Override
-//    public void init() {
-//        try (
-//                Connection connection = dataSource.getConnection();
-//                Statement statement = connection.createStatement();
-//
-//        ) {
-//            statement.execute("CREATE TABLE queries (id TEXT PRIMARY KEY, query TEXT NOT NULL, status TEXT NOT NULL)");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @Override
-//    public List<QueryModel> getAll() {
-//        try (
-//                Connection connection = dataSource.getConnection();
-//                Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery("SELECT id, query, status FROM queries");
-//        ) {
-//            while (resultSet.next()) {
-//                System.out.println(resultSet.getString("id"));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return Collections.emptyList();
-//    }
-//}

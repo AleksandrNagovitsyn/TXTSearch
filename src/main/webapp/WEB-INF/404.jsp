@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Александр
-  Date: 03.12.2019
-  Time: 19:00
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="bootstrap.jsp"%>
 <!doctype html>
@@ -14,7 +7,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>404</title>
 </head>
 <body>
 <h1>Oooops</h1>
