@@ -13,15 +13,10 @@ import java.nio.file.Paths;
 public class FileService {
 
 
-    public String writeFile (Path path, Part file) {
+    public String writeFile (Path path, Part file) throws IOException {
         if (file != null && file.getSize() != 0) {
-            try {
                 file.write(path.resolve(file.getSubmittedFileName()).toString());
                 file.delete();
-            } catch (IOException e) {
-                e.printStackTrace();
-//              TODO: додумать обработку
-            }
         }
         return  path.resolve(file.getSubmittedFileName()).toString();
 
