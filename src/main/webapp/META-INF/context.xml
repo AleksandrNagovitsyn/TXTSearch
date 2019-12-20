@@ -11,10 +11,14 @@
             facroty = "org.apache.naming.factory.BeanFactory"
     />
 
-    <Resource closeMethod="close" url="jdbc:sqlite::memory:" driverClassName="org.sqlite.JDBC" type="javax.sql.DataSource" auth="Container" name="jdbc/db"/><!--            FIXME: ругается на мемори-->
+    <Resource closeMethod="close"
+              url="jdbc:sqlite::memory:"
+              driverClassName="org.sqlite.JDBC"
+              type="javax.sql.DataSource"
+              auth="Container"
+              name="jdbc/db"/>
 
 
-<!--    TODO: для чего вообще контекст? Нужны пояснения по строчкам-->
 
 
 </Context>

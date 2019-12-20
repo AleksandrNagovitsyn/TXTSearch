@@ -2,7 +2,8 @@
 <%@ page import="ru.itpark.constants.Constants" %>
 <%@ page import="java.io.Writer" %>
 <%@ page import="java.util.Collection" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.nio.file.Path" %><%--
   Created by IntelliJ IDEA.
   User: Александр
   Date: 02.12.2019
@@ -49,15 +50,24 @@
             <input type="hidden" name="action" value="save">
         </div>
         <div class="custom-file">
-            <input type="file" name="file" id = "File" class="form-file-input" accept="text/plain">
+            <input type="file" name="file" id = "File" class="form-file-input" accept="text/plain" multiple>
 
             <label class="custom-file-label" for="File">Выбирет файл для загрузки на сервер</label>
+
         </div>
+
+
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Загрузить</button>
         </div>
     </form>
+
+    <h3>В наличии следующие файлы:</h3>
+    <%for (Path path: (List<Path>)request.getAttribute("Up")) {%>
+    <p><%=path%></p>
+    <%}%>
+
 </div>
 </body>
 </html>
