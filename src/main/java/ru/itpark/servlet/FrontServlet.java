@@ -101,9 +101,7 @@ public class FrontServlet extends HttpServlet {
 
             if (action.equals("save")) {
                 Part file = req.getPart("file");
-                System.out.println(file);
-                Collection<Part> files = req.getParts();
-                fileService.writeFile(uploadPath, files);
+                fileService.writeFile(uploadPath, file);
                 resp.sendRedirect(req.getContextPath());
             }
         }
