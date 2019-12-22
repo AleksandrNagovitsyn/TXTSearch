@@ -73,8 +73,7 @@ public class BookService {
                         .filter(o -> o.toLowerCase().contains(searchingString.toLowerCase()))
                         .collect(Collectors.toList());
                 strings.forEach(s -> {
-                    s = ("[" + pathOfText.getFileName().toString() + "] ").toUpperCase().concat(s)+System.getProperty("line.separator");
-                    System.out.println(s);
+                    s = ("[" + pathOfText.getFileName().toString() + "] ").toUpperCase().concat(s)+"\r\n";
                     founded.add(s);
                 });
             }
