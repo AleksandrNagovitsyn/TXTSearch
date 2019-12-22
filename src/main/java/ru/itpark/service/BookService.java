@@ -40,7 +40,7 @@ public class BookService {
 
 
 
-            Path createdFile = Files.createFile(path.resolve(query.getId()));
+            Path createdFile = Files.createFile(path.resolve(query.getId() + ".txt"));
 
             List<String> founded = new ArrayList<>();
 

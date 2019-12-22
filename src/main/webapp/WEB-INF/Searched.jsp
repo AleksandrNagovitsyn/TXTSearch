@@ -86,7 +86,7 @@
                 </div>
                 <div class="col">
 
-                    <a href="<%= request.getContextPath()%>/download/<%= query.getId()%>" download="">Скачать
+                    <a href="<%= request.getContextPath()%>/download/<%= query.getId()%>.txt" download="">Скачать
                         результат</a>
                 </div>
 
