@@ -27,7 +27,6 @@ public class TextServlet extends HttpServlet {
             if (parts.length != 2) {
                 throw new RuntimeException("Not Found");
             }
-            System.out.println(parts[1]);
 
             fileService.readFile(Paths.get(System.getenv("RESULTS")).toString(), parts[1] , resp.getOutputStream());
 

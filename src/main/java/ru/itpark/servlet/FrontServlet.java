@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -35,9 +32,8 @@ public class FrontServlet extends HttpServlet {
     private Path exitDirectory;
     private DataSource dataSource;
     private InitialContext context;
-    private List <String> strings;
+    private List<String> strings;
     private Queue<Query> items;
-
 
 
     @Override
@@ -68,9 +64,7 @@ public class FrontServlet extends HttpServlet {
         }
 
         fileService = new FileService();
-//        strings = new ArrayList<>();
         items = new LinkedList<>();
-
 
 
     }
@@ -83,15 +77,14 @@ public class FrontServlet extends HttpServlet {
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
-            List <Path> filesNames = new ArrayList<>();
+            List<Path> filesNames = new ArrayList<>();
             filesNames.clear();
 
-            List <Path> files = Files.list(uploadPath).collect(Collectors.toList());
+            List<Path> files = Files.list(uploadPath).collect(Collectors.toList());
             files.forEach(o -> filesNames.add(o.getFileName()));
 
             req.setAttribute("Up", filesNames);
-          req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
-
+            req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 
 
         }
@@ -99,12 +92,21 @@ public class FrontServlet extends HttpServlet {
             String action = req.getParameter("action");
 
             if (action.equals("save")) {
-                Part file = req.getPart("file");
-                fileService.writeFile(uploadPath, file);
+
+                List<Part> fileParts = req.getParts()
+                        .stream()
+                        .filter(part -> "file".equals(part.getName()))
+                        .collect(Collectors.toList());
+
+                for (Part filePart : fileParts) {
+
+                    fileService.writeFile(uploadPath, filePart);
+                }
+
                 resp.sendRedirect(req.getContextPath());
             }
         }
-         if (req.getMethod().equals("GET"))   {
+        if (req.getMethod().equals("GET")) {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
                 try {
@@ -120,7 +122,6 @@ public class FrontServlet extends HttpServlet {
 
                 req.setAttribute(Constants.ITEMS, items);
 
-//                req.setAttribute(Constants.STRINGS, strings);
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
         }

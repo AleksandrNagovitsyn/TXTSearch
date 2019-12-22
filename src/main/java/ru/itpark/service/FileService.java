@@ -13,18 +13,18 @@ import java.nio.file.Paths;
 public class FileService {
 
 
-    public String writeFile (Path path, Part file) throws IOException {
+    public void writeFile(Path path, Part file) throws IOException {
+
+
         if (file != null && file.getSize() != 0) {
-                file.write(path.resolve(file.getSubmittedFileName()).toString());
-                file.delete();
+            file.write(path.resolve(file.getSubmittedFileName()).toString());
+            file.delete();
         }
-        return  path.resolve(file.getSubmittedFileName()).toString();
+
 
     }
 
-
-
-    public void readFile (String envPath, String id, ServletOutputStream servletOutputStream) throws IOException {
+    public void readFile(String envPath, String id, ServletOutputStream servletOutputStream) throws IOException {
         Path path = Paths.get(envPath).resolve(id);
         Files.copy(path, servletOutputStream);
 
