@@ -10,6 +10,9 @@
     <title>404</title>
 </head>
 <body>
-<h1>Oooops</h1>
+<div class="container">
+<h1>Oooops!</h1>
+    <p>Страница не найдена</p>
+</div>
 </body>
 </html>

@@ -14,14 +14,14 @@
             background: aliceblue url("/old-book.jpg");
         }
     </style>
-    <title>RFCSearcher</title>
+    <title>TXT Searcher</title>
 </head>
 <body bgcolor="#c0c0c0" background="old-book.jpg">
 
 <div class="container">
 
 
-    <h1 class="page-header">RFC Searcher</h1>
+    <h1 class="page-header">TXT Searcher</h1>
 
     <form action="<%= request.getContextPath()%>/search" method="get" enctype="multipart/form-data">
         <div class="form-group">
@@ -50,13 +50,11 @@
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">Загрузить</button>
         </div>
-    </form>
 
-    <h3>В наличии следующие файлы:</h3>
-    <%for (Path path : (List<Path>) request.getAttribute("Up")) {%>
-    <p><%=path%>
-    </p>
-    <%}%>
+    </form>
+    <a href="<%= request.getContextPath()%>/downloaded" class="btn btn-primary btn-lg active mt-4" role="button"
+       aria-pressed="true">Список загруженных файлов</a>
+
 
 </div>
 </body>

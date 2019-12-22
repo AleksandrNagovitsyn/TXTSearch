@@ -1,4 +1,3 @@
-<%@ page import="java.util.List" %>
 <%@ page import="ru.itpark.constants.Constants" %>
 <%@ page import="ru.itpark.model.Query" %>
 <%@ page import="ru.itpark.enumeration.QueryStatus" %>
@@ -41,7 +40,7 @@
         <div class="mx-auto" style="width: 200px;">
 
             <a href="<%= request.getContextPath()%>/" class="btn btn-primary btn-lg active" role="button"
-               aria-pressed="true">RFC Searcher</a>
+               aria-pressed="true">TXT Searcher</a>
         </div>
     </div>
 

@@ -77,13 +77,6 @@ public class FrontServlet extends HttpServlet {
         String url = req.getRequestURI().substring(req.getContextPath().length());
 
         if (url.equals("/")) {
-            List<Path> filesNames = new ArrayList<>();
-            filesNames.clear();
-
-            List<Path> files = Files.list(uploadPath).collect(Collectors.toList());
-            files.forEach(o -> filesNames.add(o.getFileName()));
-
-            req.setAttribute("Up", filesNames);
             req.getRequestDispatcher("/WEB-INF/FrontJsp.jsp").forward(req, resp);
 
 
@@ -109,21 +102,36 @@ public class FrontServlet extends HttpServlet {
         if (req.getMethod().equals("GET")) {
             if (url.equals("/search")) {
                 String q = req.getParameter("q");
+                Path pathOfResult = null;
                 try {
-                    Path pathOfResult = bookService.search(exitDirectory, q);
-
-                    req.setAttribute(Constants.PATH, exitDirectory.resolve(pathOfResult.getFileName()));
+                    pathOfResult = bookService.search(exitDirectory, q);
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                req.setAttribute(Constants.PATH, exitDirectory.resolve(pathOfResult.getFileName()));
                 items = bookService.showQuery();
 
                 req.setAttribute(Constants.ITEMS, items);
 
                 req.getRequestDispatcher("/WEB-INF/Searched.jsp").forward(req, resp);
             }
+
+            if (url.equals("/downloaded")) {
+                List<Path> filesNames = new ArrayList<>();
+                filesNames.clear();
+
+                List<Path> files = Files.list(uploadPath).collect(Collectors.toList());
+                files.forEach(o -> filesNames.add(o.getFileName()));
+
+                req.setAttribute("Up", filesNames);
+
+
+                req.getRequestDispatcher("/WEB-INF/Downloaded.jsp").forward(req, resp);
+            }
+
         }
 
         req.getRequestDispatcher("/WEB-INF/404.jsp").forward(req, resp);
