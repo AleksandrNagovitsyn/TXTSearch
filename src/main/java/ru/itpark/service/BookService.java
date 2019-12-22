@@ -48,6 +48,7 @@ public class BookService {
                     .collect(Collectors.toList());
             toScan(pathOfTexts, searchingString, founded);
             Files.write(createdFile, founded);
+            System.out.println(founded);
 
             return createdFile;
         });
@@ -72,7 +73,8 @@ public class BookService {
                         .filter(o -> o.toLowerCase().contains(searchingString.toLowerCase()))
                         .collect(Collectors.toList());
                 strings.forEach(s -> {
-                    s = ("[" + pathOfText.getFileName().toString() + "] ").toUpperCase().concat(s+"\n");
+                    s = ("[" + pathOfText.getFileName().toString() + "] ").toUpperCase().concat(s)+System.getProperty("line.separator");
+                    System.out.println(s);
                     founded.add(s);
                 });
             }
